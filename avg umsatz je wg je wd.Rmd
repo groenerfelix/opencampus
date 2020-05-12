@@ -1,0 +1,46 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r, message = FALSE}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+
+
+wochentage <- c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")
+warengruppen <- c("Brot", "Brötchen", "Croissant", "Konditorei", "Kuchen", "Saisonbrot")
+
+umsatz <- read_csv('umsatzdaten_gekuerzt.csv')
+
+umsatz <- mutate(umsatz, Warengruppe = factor(Warengruppe), Wochentag = factor(wday(Datum, week_start = getOption("lubridate.week.start", 1)))) %>% select(-Datum)
+
+
+```
+
+```{r}
+#Tabelle von einzelnen Daten quasi zu einer Matrix (Warengruppen x Wochentage) zusammenfassen
+#dabei den Durchschnitt und die Standardabweichung berechnen
+plot_data <- aggregate(. ~ Warengruppe + Wochentag, data=umsatz, function(x) c(mean = mean(x), sd = sd(x)))
+
+#den eben erstellen Vektor "abflachen": (Umsatz(mean, sd)) wird zu (Umsatz.mean, Umsatz.sd)
+plot_data <- do.call("data.frame", plot_data) 
+plot_data
+#summary(plot_data)
+```
+
+```{r}
+#Einen BarPlot erstellen, der die Umsätze je Warengruppe je Wochentag darstellt
+ggplot(plot_data, aes(fill=Wochentag, y=Umsatz.mean, x=Warengruppe)) + 
+  geom_bar(position="dodge", stat="identity") +
+  #gray error bar for 1 SD (~68% confidence), black for 2 SD (~95% confidence)
+  geom_errorbar(aes(x=Warengruppe, ymin=Umsatz.mean-2*Umsatz.sd, ymax=Umsatz.mean+2*Umsatz.sd), position="dodge", colour="gray", alpha=0.9, size=0.5) +
+  geom_errorbar(aes(x=Warengruppe, ymin=Umsatz.mean-Umsatz.sd, ymax=Umsatz.mean+Umsatz.sd), position="dodge", colour="black", alpha=0.9, size=0.5) +
+  #change labels
+  scale_x_discrete(labels = warengruppen) +
+  scale_fill_discrete(labels = wochentage) + theme_classic()
+
+```
