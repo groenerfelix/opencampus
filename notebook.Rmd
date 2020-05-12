@@ -9,6 +9,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 
 ```{r}
+
 library(readr)
 library(lubridate)
 library(ggplot2)
@@ -16,6 +17,7 @@ library(dplyr)
 
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
+<<<<<<< HEAD
 <<<<<<< HEAD
 wetter <- read_csv("wetter.csv")
 
@@ -25,8 +27,14 @@ wetter <- read_csv("wetter.csv")
 =======
 #hallo
 >>>>>>> 2e5fa87d40977a61a4bbe0f177a7d986f28a28da
+=======
+
+#hallo
+
+>>>>>>> 739db289cf1ffa91e78c5b91a5015d210113a35a
 ```
 
 #test finn Lasse
 #test 2 Finn Lasse
 #test Patti
+#test Felix
