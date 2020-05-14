@@ -1770,8 +1770,26 @@ kiwo &lt;- read_csv(&quot;kiwo.csv&quot;)
 <!-- rnb-text-begin -->
 <p>#test finn Lasse #test 2 Finn Lasse #test Patti #test Felix</p>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcbmxpYnJhcnkobHVicmlkYXRlKVxubGlicmFyeShnZ3Bsb3QyKVxubGlicmFyeShkcGx5cilcbmBgYCJ9 -->
+<pre class="r"><code>library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2V0dGVyIDwtIHJlYWRfY3N2KFwid2V0dGVyLmNzdlwiKVxuYGBgIn0= -->
+<pre class="r"><code>wetter &lt;- read_csv(&quot;wetter.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRmVobGVyIGluIHJlYWRfY3N2KFwid2V0dGVyLmNzdlwiKSA6IGtvbm50ZSBGdW5rdGlvbiBcInJlYWRfY3N2XCIgbmljaHQgZmluZGVuXG4ifQ== -->
+<pre><code>Fehler in read_csv(&quot;wetter.csv&quot;) : konnte Funktion &quot;read_csv&quot; nicht finden</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkN0cmwrU2hpZnQrRW50ZXIqLiANCg0KDQpgYGB7cn0NCg0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkobHVicmlkYXRlKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KbGlicmFyeShkcGx5cikNCg0KdW1zYXR6ZGF0ZW4gPC0gcmVhZF9jc3YoInVtc2F0emRhdGVuX2dla3Vlcnp0LmNzdiIpDQpraXdvIDwtIHJlYWRfY3N2KCJraXdvLmNzdiIpDQoNCiNoYWxsbw0KDQpgYGANCg0KI3Rlc3QgZmlubiBMYXNzZQ0KI3Rlc3QgMiBGaW5uIExhc3NlDQojdGVzdCBQYXR0aQ0KI3Rlc3QgRmVsaXg=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkN0cmwrU2hpZnQrRW50ZXIqLiANCg0KDQpgYGB7cn0NCg0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkobHVicmlkYXRlKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KbGlicmFyeShkcGx5cikNCg0KdW1zYXR6ZGF0ZW4gPC0gcmVhZF9jc3YoInVtc2F0emRhdGVuX2dla3Vlcnp0LmNzdiIpDQpraXdvIDwtIHJlYWRfY3N2KCJraXdvLmNzdiIpDQoNCiNoYWxsbw0KDQpgYGANCg0KI3Rlc3QgZmlubiBMYXNzZQ0KI3Rlc3QgMiBGaW5uIExhc3NlDQojdGVzdCBQYXR0aQ0KI3Rlc3QgRmVsaXgNCg0KYGBge3J9DQpsaWJyYXJ5KHJlYWRyKQ0KbGlicmFyeShsdWJyaWRhdGUpDQpsaWJyYXJ5KGdncGxvdDIpDQpsaWJyYXJ5KGRwbHlyKQ0KYGBgDQoNCmBgYHtyIGxlc2VuIGRlciBjc3YgRGF0ZWllbn0NCndldHRlciA8LSByZWFkX2Nzdigid2V0dGVyLmNzdiIpDQoNCmtpd28gPC0gcmVhZF9jc3YoImtpd28uY3N2IikNCg0KdW1zYXR6ZGF0ZW5fZ2VrdWVyenQgPC0gcmVhZF9jc3YoInVtc2F0emRhdGVuX2dla3Vlcnp0LmNzdiIpDQp1bXNhdHo8LXVtc2F0emRhdGVuX2dla3Vlcnp0DQp1bXNhdHpkYXRlbiR3b2NoZW50YWcgPC0gd2Vla2RheXModW1zYXR6ZGF0ZW4kRGF0dW0pDQoNCkpvaW48LWRwbHlyOjpmdWxsX2pvaW4oa2l3byx3ZXR0ZXIsIGJ5ID0gIkRhdHVtIikNClVLVzwtZHBseXI6OmZ1bGxfam9pbihKb2luLHVtc2F0eiwgYnkgPSAiRGF0dW0iKQ0KDQpgYGANCg==</div>
 
 
 
