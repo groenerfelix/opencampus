@@ -26,3 +26,26 @@ kiwo <- read_csv("kiwo.csv")
 #test 2 Finn Lasse
 #test Patti
 #test Felix
+
+```{r}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r lesen der csv Dateien}
+wetter <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/wetter.csv")
+
+kiwo <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/kiwo.csv")
+
+umsatzdaten_gekuerzt <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/umsatzdaten_gekuerzt.csv")
+umsatz<-umsatzdaten_gekuerzt
+umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
+
+Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
+UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
+
+```
+```
+
