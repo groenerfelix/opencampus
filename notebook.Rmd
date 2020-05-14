@@ -35,11 +35,11 @@ library(dplyr)
 ```
 
 ```{r lesen der csv Dateien}
-wetter <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/wetter.csv")
+wetter <- read_csv("wetter.csv")
 
-kiwo <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/kiwo.csv")
+kiwo <- read_csv("kiwo.csv")
 
-umsatzdaten_gekuerzt <- read_csv("C:/2020/uni/Sommersemster 2020/Einführung in R/2.Termin/sose20-datascience-master/umsatzdaten_gekuerzt.csv")
+umsatzdaten_gekuerzt <- read_csv("umsatzdaten_gekuerzt.csv")
 umsatz<-umsatzdaten_gekuerzt
 umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
 
@@ -47,5 +47,3 @@ Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
 UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
 
 ```
-```
-
