@@ -17,33 +17,8 @@ library(dplyr)
 
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
-<<<<<<< HEAD
-<<<<<<< HEAD
 wetter <- read_csv("wetter.csv")
 
-# testpush chrismay
-# another test
-
-=======
-#hallo
->>>>>>> 2e5fa87d40977a61a4bbe0f177a7d986f28a28da
-=======
-
-#hallo
-
->>>>>>> 739db289cf1ffa91e78c5b91a5015d210113a35a
-```
-
-#test finn Lasse
-#test 2 Finn Lasse
-#test Patti
-#test Felix
-
-```{r}
-library(readr)
-library(lubridate)
-library(ggplot2)
-library(dplyr)
 ```
 
 ```{r lesen der csv Dateien}
@@ -59,3 +34,33 @@ Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
 UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
 
 ```
+
+```{r}
+# include weekdays...
+
+library(readr)
+library(dplyr)
+library(lubridate)
+weekdays_holidays <- read_csv("weekdays_holidays.csv")
+weekdays_holidays$Bewoelkung <- NULL
+weekdays_holidays$Temperatur <- NULL
+weekdays_holidays$Windgeschwindigkeit <- NULL
+weekdays_holidays$Wettercode <- NULL
+weekdays_holidays$weekday <- wday(weekdays_holidays$Datum, label = TRUE)
+Join <- dplyr::left_join(weekdays_holidays,Join, by = "Datum")
+
+# install.packages("timeDate","chron")
+library(timeDate)
+library(chron)
+hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve") 
+holidays <- dates(as.character(holiday(2012:2019,hlist)),format="Y-M-D" )
+View(holidays)
+
+#dplyr::left_join(x, y, by = "Datum")
+#rm(hlist, holidays)
+
+# some holidays are missing, check: https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
+# need help to include valuer "holidays" into weekdays_holidays_df
+
+```
+
