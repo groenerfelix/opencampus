@@ -35,7 +35,7 @@ UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
 
 ```
 
-```{r}
+```{r by chris}
 # include weekdays...
 
 library(readr)
@@ -62,5 +62,12 @@ View(holidays)
 # some holidays are missing, check: https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
 # need help to include valuer "holidays" into weekdays_holidays_df
 
+
+#full table by CM
+UmsatzfullCM <- dplyr::full_join(UKW, weekdays_holidays)
+
+#modell by CM
+modCM <- lm(UmsatzfullCM$Umsatz ~ UmsatzfullCM$Datum + UmsatzfullCM$KielerWoche + UmsatzfullCM$Bewoelkung + UmsatzfullCM$Temperatur + UmsatzfullCM$Temperatur + UmsatzfullCM$Windgeschwindigkeit + UmsatzfullCM$Wettercode + as.factor(UmsatzfullCM$Warengruppe) + as.factor(UmsatzfullCM$weekday))
+summary(modCM)
 ```
 
