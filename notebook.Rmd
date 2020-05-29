@@ -69,5 +69,24 @@ UmsatzfullCM <- dplyr::full_join(UKW, weekdays_holidays)
 #modell by CM
 modCM <- lm(UmsatzfullCM$Umsatz ~ UmsatzfullCM$Datum + UmsatzfullCM$KielerWoche + UmsatzfullCM$Bewoelkung + UmsatzfullCM$Temperatur + UmsatzfullCM$Temperatur + UmsatzfullCM$Windgeschwindigkeit + UmsatzfullCM$Wettercode + as.factor(UmsatzfullCM$Warengruppe) + as.factor(UmsatzfullCM$weekday))
 summary(modCM)
+
+
+#load e1071
+library(e1071)
+
+#set seed
+#indices train
+
+#train data
+#test data(
+
+modSVMCM <- svm(Umsatz ~ Datum, UmsatzfullCM)
+
+#hardcoreSVM svm_tune
+
+pred_test <- predict(modSVMCM$best.model, UmsatzfullCM)
+
+  
+)
 ```
 
