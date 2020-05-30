@@ -11,19 +11,31 @@ author: "Felix"
 library(readr)
 library(ggplot2)
 library(dplyr)
-
+library(gtools)
 ```
 
 ```{r, message=FALSE}
 kiwo <- read_csv('kiwo.csv')
 umsatz <- read_csv('umsatzdaten_gekuerzt.csv')
-#summary(kiwo)
 
-umsatz <- left_join(umsatz,kiwo)
+#Die Variable KielerWoche mit 1 und 0 einfügen; muss später noch mit as.factor() behandelt werden
+umsatz <- left_join(umsatz,kiwo) %>% mutate(Wochentag = weekdays(Datum))
+umsatz$KielerWoche <- na.replace(umsatz$KielerWoche, 0)
 
 ```
 
 ```{r}
-group_by(umsatz, KielerWoche) %>% summarise(Umsatz = mean(Umsatz))
+#grouped <- group_by(umsatz, Datum) %>% summarise(Umsatz = mean(Umsatz), Wochentag = Wochentag, KiWo = KielerWoche)
+
+#head(grouped)
+grouped <- group_by(umsatz, Datum)%>%summarise(Gesamtumsatz=sum(Umsatz))
+
+model_data <- inner_join(umsatz, grouped, by = "Datum") %>% select(Datum, Gesamtumsatz, Wochentag, KielerWoche)
+
+head(model_data)
+
+model <- lm(Gesamtumsatz ~ as.factor(Wochentag) + KielerWoche, data=model_data)
+summary(model)
+
 ```
 

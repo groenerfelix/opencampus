@@ -1753,48 +1753,14 @@ summary {
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KHJlYWRyKVxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KHJlYWRyKVxubGlicmFyeShsdWJyaWRhdGUpXG5saWJyYXJ5KGdncGxvdDIpXG5saWJyYXJ5KGRwbHlyKVxuXG51bXNhdHpkYXRlbiA8LSByZWFkX2NzdihcInVtc2F0emRhdGVuX2dla3Vlcnp0LmNzdlwiKVxuYGBgIn0= -->
 <pre class="r"><code>
 library(readr)
-library(lubridate)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hlIFBha2V0OiDjpLzjuLFsdWJyaWRhdGXjpLzjuLJcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDjpLzjuLFwYWNrYWdlOmJhc2XjpLzjuLI6XG5cbiAgICBkYXRlLCBpbnRlcnNlY3QsIHNldGRpZmYsIHVuaW9uXG4ifQ== -->
-<pre><code>
-Attache Paket: 㤼㸱lubridate㤼㸲
+library(lubridate)
+library(ggplot2)
+library(dplyr)
 
-The following objects are masked from 㤼㸱package:base㤼㸲:
-
-    date, intersect, setdiff, union</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxuYGBgIn0= -->
-<pre class="r"><code>library(ggplot2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2Qgb3ZlcndyaXR0ZW4gYnkgJ2RwbHlyJzpcbiAgbWV0aG9kICAgICAgICAgICBmcm9tXG4gIHByaW50LnJvd3dpc2VfZGYgICAgIFxuIn0= -->
-<pre><code>Registered S3 method overwritten by &#39;dplyr&#39;:
-  method           from
-  print.rowwise_df     </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmBgYCJ9 -->
-<pre class="r"><code>library(dplyr)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hlIFBha2V0OiDjpLzjuLFkcGx5cuOkvOO4slxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOOkvOO4sXBhY2thZ2U6bHVicmlkYXRl46S847iyOlxuXG4gICAgaW50ZXJzZWN0LCBzZXRkaWZmLCB1bmlvblxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOOkvOO4sXBhY2thZ2U6c3RhdHPjpLzjuLI6XG5cbiAgICBmaWx0ZXIsIGxhZ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOOkvOO4sXBhY2thZ2U6YmFzZeOkvOO4sjpcblxuICAgIGludGVyc2VjdCwgc2V0ZGlmZiwgc2V0ZXF1YWwsIHVuaW9uXG4ifQ== -->
-<pre><code>
-Attache Paket: 㤼㸱dplyr㤼㸲
-
-The following objects are masked from 㤼㸱package:lubridate㤼㸲:
-
-    intersect, setdiff, union
-
-The following objects are masked from 㤼㸱package:stats㤼㸲:
-
-    filter, lag
-
-The following objects are masked from 㤼㸱package:base㤼㸲:
-
-    intersect, setdiff, setequal, union</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudW1zYXR6ZGF0ZW4gPC0gcmVhZF9jc3YoXCJ1bXNhdHpkYXRlbl9nZWt1ZXJ6dC5jc3ZcIilcbmBgYCJ9 -->
-<pre class="r"><code>umsatzdaten &lt;- read_csv(&quot;umsatzdaten_gekuerzt.csv&quot;)</code></pre>
+umsatzdaten &lt;- read_csv(&quot;umsatzdaten_gekuerzt.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICBEYXR1bSA9IFx1MDAxYlszNG1jb2xfZGF0ZShmb3JtYXQgPSBcIlwiKVx1MDAxYlszOW0sXG4gIFdhcmVuZ3J1cHBlID0gXHUwMDFiWzMybWNvbF9kb3VibGUoKVx1MDAxYlszOW0sXG4gIFVtc2F0eiA9IFx1MDAxYlszMm1jb2xfZG91YmxlKClcdTAwMWJbMzltXG4pXG4ifQ== -->
 <pre><code>Parsed with column specification:
@@ -1877,9 +1843,56 @@ UKW&lt;-dplyr::full_join(Join,umsatz, by = &quot;Datum&quot;)
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RDTSlcblxuYGBgIn0= -->
-<pre class="r"><code>summary(modCM)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBpbmNsdWRlIHdlZWtkYXlzLi4uXG5cbmxpYnJhcnkocmVhZHIpXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeShsdWJyaWRhdGUpXG53ZWVrZGF5c19ob2xpZGF5cyA8LSByZWFkX2NzdihcIndlZWtkYXlzX2hvbGlkYXlzLmNzdlwiKVxuYGBgIn0= -->
+<pre class="r"><code># include weekdays...
+
+library(readr)
+library(dplyr)
+library(lubridate)
+weekdays_holidays &lt;- read_csv(&quot;weekdays_holidays.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICBEYXR1bSA9IFx1MDAxYlszNG1jb2xfZGF0ZShmb3JtYXQgPSBcIlwiKVx1MDAxYlszOW0sXG4gIEJld29lbGt1bmcgPSBcdTAwMWJbMzJtY29sX2RvdWJsZSgpXHUwMDFiWzM5bSxcbiAgVGVtcGVyYXR1ciA9IFx1MDAxYlszMm1jb2xfZG91YmxlKClcdTAwMWJbMzltLFxuICBXaW5kZ2VzY2h3aW5kaWdrZWl0ID0gXHUwMDFiWzMybWNvbF9kb3VibGUoKVx1MDAxYlszOW0sXG4gIFdldHRlcmNvZGUgPSBcdTAwMWJbMzJtY29sX2RvdWJsZSgpXHUwMDFiWzM5bVxuKVxuIn0= -->
+<pre><code>Parsed with column specification:
+cols(
+  Datum = [34mcol_date(format = &quot;&quot;)[39m,
+  Bewoelkung = [32mcol_double()[39m,
+  Temperatur = [32mcol_double()[39m,
+  Windgeschwindigkeit = [32mcol_double()[39m,
+  Wettercode = [32mcol_double()[39m
+)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2Vla2RheXNfaG9saWRheXMkQmV3b2Vsa3VuZyA8LSBOVUxMXG53ZWVrZGF5c19ob2xpZGF5cyRUZW1wZXJhdHVyIDwtIE5VTExcbndlZWtkYXlzX2hvbGlkYXlzJFdpbmRnZXNjaHdpbmRpZ2tlaXQgPC0gTlVMTFxud2Vla2RheXNfaG9saWRheXMkV2V0dGVyY29kZSA8LSBOVUxMXG53ZWVrZGF5c19ob2xpZGF5cyR3ZWVrZGF5IDwtIHdkYXkod2Vla2RheXNfaG9saWRheXMkRGF0dW0sIGxhYmVsID0gVFJVRSlcbkpvaW4gPC0gZHBseXI6OmxlZnRfam9pbih3ZWVrZGF5c19ob2xpZGF5cyxKb2luLCBieSA9IFwiRGF0dW1cIilcblxuIyBpbnN0YWxsLnBhY2thZ2VzKFwidGltZURhdGVcIixcImNocm9uXCIpXG5saWJyYXJ5KHRpbWVEYXRlKVxubGlicmFyeShjaHJvbilcbmhsaXN0IDwtIGMoXCJFYXN0ZXJcIixcIkRFQXNjZW5zaW9uXCIsXCJERUdlcm1hblVuaXR5XCIsXCJERUNocmlzdG1hc0V2ZVwiLFwiREVOZXdZZWFyc0V2ZVwiKSBcbmhvbGlkYXlzIDwtIGRhdGVzKGFzLmNoYXJhY3Rlcihob2xpZGF5KDIwMTI6MjAxOSxobGlzdCkpLGZvcm1hdD1cIlktTS1EXCIgKVxuVmlldyhob2xpZGF5cylcblxuI2RwbHlyOjpsZWZ0X2pvaW4oeCwgeSwgYnkgPSBcIkRhdHVtXCIpXG4jcm0oaGxpc3QsIGhvbGlkYXlzKVxuXG4jIHNvbWUgaG9saWRheXMgYXJlIG1pc3NpbmcsIGNoZWNrOiBodHRwczovL3p1ZmlzaC5zY2hsZXN3aWctaG9sc3RlaW4uZGUvZGV0YWlsP2FyZWFJZD0mcHN0SWQ9ODk2Nzc2MCZvdUlkPSZpbmZvdHlwZT0wXG4jIG5lZWQgaGVscCB0byBpbmNsdWRlIHZhbHVlciBcImhvbGlkYXlzXCIgaW50byB3ZWVrZGF5c19ob2xpZGF5c19kZlxuXG5cbiNmdWxsIHRhYmxlIGJ5IENNXG5VbXNhdHpmdWxsQ00gPC0gZHBseXI6OmZ1bGxfam9pbihVS1csIHdlZWtkYXlzX2hvbGlkYXlzKVxuYGBgIn0= -->
+<pre class="r"><code>weekdays_holidays$Bewoelkung &lt;- NULL
+weekdays_holidays$Temperatur &lt;- NULL
+weekdays_holidays$Windgeschwindigkeit &lt;- NULL
+weekdays_holidays$Wettercode &lt;- NULL
+weekdays_holidays$weekday &lt;- wday(weekdays_holidays$Datum, label = TRUE)
+Join &lt;- dplyr::left_join(weekdays_holidays,Join, by = &quot;Datum&quot;)
+
+# install.packages(&quot;timeDate&quot;,&quot;chron&quot;)
+library(timeDate)
+library(chron)
+hlist &lt;- c(&quot;Easter&quot;,&quot;DEAscension&quot;,&quot;DEGermanUnity&quot;,&quot;DEChristmasEve&quot;,&quot;DENewYearsEve&quot;) 
+holidays &lt;- dates(as.character(holiday(2012:2019,hlist)),format=&quot;Y-M-D&quot; )
+View(holidays)
+
+#dplyr::left_join(x, y, by = &quot;Datum&quot;)
+#rm(hlist, holidays)
+
+# some holidays are missing, check: https://zufish.schleswig-holstein.de/detail?areaId=&amp;pstId=8967760&amp;ouId=&amp;infotype=0
+# need help to include valuer &quot;holidays&quot; into weekdays_holidays_df
+
+
+#full table by CM
+UmsatzfullCM &lt;- dplyr::full_join(UKW, weekdays_holidays)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBcIkRhdHVtXCJcbiJ9 -->
+<pre><code>Joining, by = &quot;Datum&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI21vZGVsbCBieSBDTVxubW9kQ00gPC0gbG0oVW1zYXR6ZnVsbENNJFVtc2F0eiB+IFVtc2F0emZ1bGxDTSREYXR1bSArIFVtc2F0emZ1bGxDTSRLaWVsZXJXb2NoZSArIFVtc2F0emZ1bGxDTSRCZXdvZWxrdW5nICsgVW1zYXR6ZnVsbENNJFRlbXBlcmF0dXIgKyBVbXNhdHpmdWxsQ00kVGVtcGVyYXR1ciArIFVtc2F0emZ1bGxDTSRXaW5kZ2VzY2h3aW5kaWdrZWl0ICsgVW1zYXR6ZnVsbENNJFdldHRlcmNvZGUgKyBhcy5mYWN0b3IoVW1zYXR6ZnVsbENNJFdhcmVuZ3J1cHBlKSArIGFzLmZhY3RvcihVbXNhdHpmdWxsQ00kd2Vla2RheSkpXG5zdW1tYXJ5KG1vZENNKVxuYGBgIn0= -->
+<pre class="r"><code>#modell by CM
+modCM &lt;- lm(UmsatzfullCM$Umsatz ~ UmsatzfullCM$Datum + UmsatzfullCM$KielerWoche + UmsatzfullCM$Bewoelkung + UmsatzfullCM$Temperatur + UmsatzfullCM$Temperatur + UmsatzfullCM$Windgeschwindigkeit + UmsatzfullCM$Wettercode + as.factor(UmsatzfullCM$Warengruppe) + as.factor(UmsatzfullCM$weekday))
+summary(modCM)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IFVtc2F0emZ1bGxDTSRVbXNhdHogfiBVbXNhdHpmdWxsQ00kRGF0dW0gKyBVbXNhdHpmdWxsQ00kS2llbGVyV29jaGUgKyBcbiAgICBVbXNhdHpmdWxsQ00kQmV3b2Vsa3VuZyArIFVtc2F0emZ1bGxDTSRUZW1wZXJhdHVyICsgVW1zYXR6ZnVsbENNJFRlbXBlcmF0dXIgKyBcbiAgICBVbXNhdHpmdWxsQ00kV2luZGdlc2Nod2luZGlna2VpdCArIFVtc2F0emZ1bGxDTSRXZXR0ZXJjb2RlICsgXG4gICAgYXMuZmFjdG9yKFVtc2F0emZ1bGxDTSRXYXJlbmdydXBwZSkgKyBhcy5mYWN0b3IoVW1zYXR6ZnVsbENNJHdlZWtkYXkpKVxuXG5SZXNpZHVhbHM6XG4gICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCBcbi0xNjQuNTIxICAtNDEuMDgwICAgLTAuODM5ICAgMzEuNjc2ICAyNzcuMDkzIFxuXG5Db2VmZmljaWVudHM6ICgxIG5vdCBkZWZpbmVkIGJlY2F1c2Ugb2Ygc2luZ3VsYXJpdGllcylcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgICAgICAgICAgICAgIDQ5MC40Mjg5MCAgMjAxLjI2NjczICAgMi40MzcgICAwLjAxNjAgKiAgXG5VbXNhdHpmdWxsQ00kRGF0dW0gICAgICAgICAgICAgICAgICAgIC0wLjAyMTIyICAgIDAuMDEyMDQgIC0xLjc2MiAgIDAuMDgwMSAuICBcblVtc2F0emZ1bGxDTSRLaWVsZXJXb2NoZSAgICAgICAgICAgICAgICAgICAgTkEgICAgICAgICBOQSAgICAgIE5BICAgICAgIE5BICAgIFxuVW1zYXR6ZnVsbENNJEJld29lbGt1bmcgICAgICAgICAgICAgICAgMS4wNzI1NSAgICA0LjEzMjEwICAgMC4yNjAgICAwLjc5NTYgICAgXG5VbXNhdHpmdWxsQ00kVGVtcGVyYXR1ciAgICAgICAgICAgICAgIC0xLjI3ODU2ICAgIDIuNzY1NzMgIC0wLjQ2MiAgIDAuNjQ0NiAgICBcblVtc2F0emZ1bGxDTSRXaW5kZ2VzY2h3aW5kaWdrZWl0ICAgICAgIDAuODQ2NTggICAgMS44Mzg3MyAgIDAuNDYwICAgMC42NDU5ICAgIFxuVW1zYXR6ZnVsbENNJFdldHRlcmNvZGUgICAgICAgICAgICAgICAgMC4yNjE3MSAgICAwLjIyODg3ICAgMS4xNDQgICAwLjI1NDcgICAgXG5hcy5mYWN0b3IoVW1zYXR6ZnVsbENNJFdhcmVuZ3J1cHBlKTIgMzk0Ljg3MTU2ICAgMTYuMTU1MjIgIDI0LjQ0MiAgPCAyZS0xNiAqKipcbmFzLmZhY3RvcihVbXNhdHpmdWxsQ00kV2FyZW5ncnVwcGUpMyAgODMuOTM4MDAgICAxNi4xNTUyMiAgIDUuMTk2IDYuNjBlLTA3ICoqKlxuYXMuZmFjdG9yKFVtc2F0emZ1bGxDTSRXYXJlbmdydXBwZSk0IC02Ny4yNzE4OSAgIDE2LjE1NTIyICAtNC4xNjQgNS4yN2UtMDUgKioqXG5hcy5mYWN0b3IoVW1zYXR6ZnVsbENNJFdhcmVuZ3J1cHBlKTUgMTgzLjQ2NzY1ICAgMTYuMTU1MjIgIDExLjM1NyAgPCAyZS0xNiAqKipcbmFzLmZhY3RvcihVbXNhdHpmdWxsQ00kd2Vla2RheSkuTCAgICAgMjQuNTc1MTMgICAxNi4wMjg2MCAgIDEuNTMzICAgMC4xMjczICAgIFxuYXMuZmFjdG9yKFVtc2F0emZ1bGxDTSR3ZWVrZGF5KS5RICAgICA4My4wMTYyMiAgIDE0LjE5NzI3ICAgNS44NDcgMy4wNGUtMDggKioqXG5hcy5mYWN0b3IoVW1zYXR6ZnVsbENNJHdlZWtkYXkpLkMgICAgICA0LjgxNDc1ICAgMTQuNTU4NTYgICAwLjMzMSAgIDAuNzQxMyAgICBcbmFzLmZhY3RvcihVbXNhdHpmdWxsQ00kd2Vla2RheSleNCAgICAgMjQuNzcwNTggICAxNS45MzI4MSAgIDEuNTU1ICAgMC4xMjIxICAgIFxuYXMuZmFjdG9yKFVtc2F0emZ1bGxDTSR3ZWVrZGF5KV41ICAgICAtNC4zMDc5NSAgIDE1LjI3ODgzICAtMC4yODIgICAwLjc3ODQgICAgXG5hcy5mYWN0b3IoVW1zYXR6ZnVsbENNJHdlZWtkYXkpXjYgICAgIC0yLjg2NzEwICAgMTcuNTA0NzcgIC0wLjE2NCAgIDAuODcwMSAgICBcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5SZXNpZHVhbCBzdGFuZGFyZCBlcnJvcjogNjUuNjIgb24gMTQ5IGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoMTEyMTggb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuTXVsdGlwbGUgUi1zcXVhcmVkOiAgMC44Nzg2LFx0QWRqdXN0ZWQgUi1zcXVhcmVkOiAgMC44NjY0IFxuRi1zdGF0aXN0aWM6IDcxLjkxIG9uIDE1IGFuZCAxNDkgREYsICBwLXZhbHVlOiA8IDIuMmUtMTZcbiJ9 -->
 <pre><code>
@@ -1919,6 +1932,35 @@ Residual standard error: 65.62 on 149 degrees of freedom
   (11218 observations deleted due to missingness)
 Multiple R-squared:  0.8786,    Adjusted R-squared:  0.8664 
 F-statistic: 71.91 on 15 and 149 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2xvYWQgZTEwNzFcbmxpYnJhcnkoZTEwNzEpXG5gYGAifQ== -->
+<pre class="r"><code>#load e1071
+library(e1071)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hlIFBha2V0OiDjpLzjuLFlMTA3MeOkvOO4slxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOOkvOO4sXBhY2thZ2U6dGltZURhdGXjpLzjuLI6XG5cbiAgICBrdXJ0b3Npcywgc2tld25lc3NcbiJ9 -->
+<pre><code>
+Attache Paket: 㤼㸱e1071㤼㸲
+
+The following objects are masked from 㤼㸱package:timeDate㤼㸲:
+
+    kurtosis, skewness</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3NldCBzZWVkXG4jaW5kaWNlcyB0cmFpblxuXG4jdHJhaW4gZGF0YVxuI3Rlc3QgZGF0YShcblxubW9kU1ZNQ00gPC0gc3ZtKFVtc2F0eiB+IERhdHVtLCBVbXNhdHpmdWxsQ00pXG5cbiNoYXJkY29yZVNWTSBzdm1fdHVuZVxuXG5wcmVkX3Rlc3QgPC0gcHJlZGljdChtb2RTVk1DTSRiZXN0Lm1vZGVsLCBVbXNhdHpmdWxsQ00pXG5gYGAifQ== -->
+<pre class="r"><code>#set seed
+#indices train
+
+#train data
+#test data(
+
+modSVMCM &lt;- svm(Umsatz ~ Datum, UmsatzfullCM)
+
+#hardcoreSVM svm_tune
+
+pred_test &lt;- predict(modSVMCM$best.model, UmsatzfullCM)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRmVobGVyIGluIFVzZU1ldGhvZChcInByZWRpY3RcIikgOiBcbiAgbmljaHQgYW53ZW5kYmFyZSBNZXRob2RlIGbDvHIgJ3ByZWRpY3QnIGF1ZiBPYmpla3QgZGVyIEtsYXNzZSBcIk5VTExcIiBhbmdld2VuZGV0XG4ifQ== -->
+<pre><code>Fehler in UseMethod(&quot;predict&quot;) : 
+  nicht anwendbare Methode für &#39;predict&#39; auf Objekt der Klasse &quot;NULL&quot; angewendet</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

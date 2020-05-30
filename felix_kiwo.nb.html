@@ -1753,55 +1753,86 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoZHBseXIpXG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KGd0b29scylcbmBgYCJ9 -->
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)
+library(gtools)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2l3byA8LSByZWFkX2Nzdigna2l3by5jc3YnKVxudW1zYXR6IDwtIHJlYWRfY3N2KCd1bXNhdHpkYXRlbl9nZWt1ZXJ6dC5jc3YnKVxuI3N1bW1hcnkoa2l3bylcblxuXG5cbnVtc2F0eiA8LSBsZWZ0X2pvaW4odW1zYXR6LGtpd28pICU+JSBtdXRhdGUoV29jaGVudGFnID0gd2Vla2RheXMoRGF0dW0pKVxuXG51bXNhdHokS2llbGVyV29jaGUgPC0gbmEucmVwbGFjZSh1bXNhdHokS2llbGVyV29jaGUsIDApXG5cbmBgYCJ9 -->
+<pre class="r"><code>kiwo &lt;- read_csv(&#39;kiwo.csv&#39;)
+umsatz &lt;- read_csv(&#39;umsatzdaten_gekuerzt.csv&#39;)
+#summary(kiwo)
+
+
+
+umsatz &lt;- left_join(umsatz,kiwo) %&gt;% mutate(Wochentag = weekdays(Datum))
+
+umsatz$KielerWoche &lt;- na.replace(umsatz$KielerWoche, 0)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2l3byA8LSByZWFkX2Nzdigna2l3by5jc3YnKVxudW1zYXR6IDwtIHJlYWRfY3N2KCd1bXNhdHpkYXRlbl9nZWt1ZXJ6dC5jc3YnKVxuI3N1bW1hcnkoa2l3bylcblxudW1zYXR6IDwtIGxlZnRfam9pbih1bXNhdHosa2l3bykgJT4lIGdyb3VwX2J5KEtpZWxlcldvY2hlKSAlPiUgc3VtbWFyaXNlKFVtc2F0eiA9IG1lYW4oVW1zYXR6KSlcbmhlYWQodW1zYXR6KVxuYGBgIn0= -->
-<pre class="r"><code>kiwo &lt;- read_csv(&#39;kiwo.csv&#39;)
-umsatz &lt;- read_csv(&#39;umsatzdaten_gekuerzt.csv&#39;)
-#summary(kiwo)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2dyb3VwZWQgPC0gZ3JvdXBfYnkodW1zYXR6LCBEYXR1bSkgJT4lIHN1bW1hcmlzZShVbXNhdHogPSBtZWFuKFVtc2F0eiksIFdvY2hlbnRhZyA9IFdvY2hlbnRhZywgS2lXbyA9IEtpZWxlcldvY2hlKVxuXG4jaGVhZChncm91cGVkKVxuZ3JvdXBlZCA8LSBncm91cF9ieSh1bXNhdHosIERhdHVtKSU+JXN1bW1hcmlzZShHZXNhbXR1bXNhdHo9c3VtKFVtc2F0eikpXG5cbm1vZGVsX2RhdGEgPC0gaW5uZXJfam9pbih1bXNhdHosIGdyb3VwZWQsIGJ5ID0gXCJEYXR1bVwiKSAlPiUgc2VsZWN0KERhdHVtLCBHZXNhbXR1bXNhdHosIFdvY2hlbnRhZywgS2llbGVyV29jaGUpXG5cbmhlYWQobW9kZWxfZGF0YSlcbmBgYCJ9 -->
+<pre class="r"><code>#grouped &lt;- group_by(umsatz, Datum) %&gt;% summarise(Umsatz = mean(Umsatz), Wochentag = Wochentag, KiWo = KielerWoche)
 
-umsatz &lt;- left_join(umsatz,kiwo) %&gt;% group_by(KielerWoche) %&gt;% summarise(Umsatz = mean(Umsatz))
-head(umsatz)</code></pre>
+#head(grouped)
+grouped &lt;- group_by(umsatz, Datum)%&gt;%summarise(Gesamtumsatz=sum(Umsatz))
+
+model_data &lt;- inner_join(umsatz, grouped, by = &quot;Datum&quot;) %&gt;% select(Datum, Gesamtumsatz, Wochentag, KielerWoche)
+
+head(model_data)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6MiwibnJvdyI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUJndHlpVERtaXVCaVlHQmdabUJtQTJKV0lKT0J6VG5BME1qVWlJR0JoUW5JWTJSZ1llQUUwUlZBVmNKQUJraVFEMFRiZjJBQWczb3d6YjRJSnU1UTRQR3AvMVd6cUVQbXhqWGJDbCtLb0JuRW1wZVltMW9NWkFpQURZTUljbnRucHVha0ZvWG5KMmVrUW9YWVFuT0xFMHVxMEhSekZ1V1g2OEZNNEFXWjBBQWsvdi8vL3cvZG11U2N4R0tZTlRCQnJwVEVra1M5dENLZ2ZpQVBYUXQ3ZmtGSlpuNGVVQk1UeUtOc2FKb1ppOUFFQkVyelFDNUowVTNPS00zTDFqVTFCZGtBbG9jQVpEWXZsTTJFeWdiWnovUWZhaTRiek9lcGVlbVplYkJ3WU0xSlRFck5nVGtSNlBIaXhIU1lIQjh3Tk1DQm9WZFFsSmxYQXZNbFVMUllyeVMvSkJHbWpTczVQd2NtQXZZM3d6OEFPV2h4VS93QkFBQT0ifQ== -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6NCwibnJvdyI6Nn0sInJkZiI6Ikg0c0lBQUFBQUFBQUJwVlN6VXJEUUJEZXBrbmFSRnRGRWZXaTRsRm93S28zRDBHREhxUW9lckRYTlYzYllMb3B5WmFLSU9nTENGVVJQZlRneTNqdFFRV2Z3SWNRYkp3a3U1RG01c0l3ODMwN083OTdiTlUzOUxxT0VNcWp2QXFpZ0luVTNhUDE2bFlWSVZrQ2xFTXkwaUo5Q1Y2ellNaWd5NUdiT1N6Y1JQN21zSWk0NWxqaldPTllSOGtaQzZqWUxnNENNS1pUcEd4aFJrQ1BRSklrRHgvaDNPK09aajdWaXkrSDVUZXozMSs4L2xxK00rOXZ0OFBWNzNmemNXVitzUEQ2YVQ3UExBMTZhK3M4bnNyanFUV1BNdHprcUdnNWhBWXBYSE1ZNjNsMmkyUGQ4aWdsZnNxanNPY1RKd1ZQY0R1KzVkV2hmNS94RVZEY0ptSUVzaUJoQk4wMkI1UDdKTUJ0d0FGbVY1elRUcUZpa21wcjRzQWhMdkZqT3BOQjg3MmVJYktVUUtSb0pXRVkvaVNPVXBoWmdON0FEQnZuUGp4SjFqQVdydUIxbU9OUkNDWkZYMEhKUE03NUdXS3FTNlBrallyZDZ0S0x5bWFVSUw1T1RvbmJhc3FXazVSNVVaZ2lOa2xvMDZGRURNbkZaOFRsb0F4TnhqMGFIZCtoVEhRQ2JHQXdqMkhocDl1ZUs1amtpNDMrQU9qTWZQOENBd0FBIn0= -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["KielerWoche"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Umsatz"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"260.5592"},{"1":"NA","2":"205.5523"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
+{"columns":[{"label":["Datum"],"name":[1],"type":["date"],"align":["right"]},{"label":["Gesamtumsatz"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Wochentag"],"name":[3],"type":["chr"],"align":["left"]},{"label":["KielerWoche"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"2013-07-01","2":"1269.249","3":"Montag","4":"0"},{"1":"2013-07-02","2":"1430.008","3":"Dienstag","4":"0"},{"1":"2013-07-03","2":"1124.275","3":"Mittwoch","4":"0"},{"1":"2013-07-04","2":"1184.310","3":"Donnerstag","4":"0"},{"1":"2013-07-05","2":"1288.023","3":"Freitag","4":"0"},{"1":"2013-07-06","2":"1540.530","3":"Samstag","4":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[4]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbk5BXG5OQVxuYGBgIn0= -->
-<pre class="r"><code>NA
-NA
-NA</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5tb2RlbCA8LSBsbShHZXNhbXR1bXNhdHogfiBhcy5mYWN0b3IoV29jaGVudGFnKSArIEtpZWxlcldvY2hlLCBkYXRhPW1vZGVsX2RhdGEpXG5zdW1tYXJ5KG1vZGVsKVxuYGBgIn0= -->
+<pre class="r"><code>
+model &lt;- lm(Gesamtumsatz ~ as.factor(Wochentag) + KielerWoche, data=model_data)
+summary(model)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JvdXBfYnkodW1zYXR6LCBLaWVsZXJXb2NoZSkgJT4lIHN1bW1hcmlzZShVbXNhdHogPSBtZWFuKFVtc2F0eikpXG5gYGAifQ== -->
-<pre class="r"><code>group_by(umsatz, KielerWoche) %&gt;% summarise(Umsatz = mean(Umsatz))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6MiwibnJvdyI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUJndHlpVERtaXVCaVlHQmdabUJtQTJKV0lKT0J6VG5BME1qVWlJR0JoUW5JWTJSZ1llQUUwUlZBVmNKQUJraVFEMFRiZjJBQWczb3d6YjRJSnU1UTRQR3AvMVd6cUVQbXhqWGJDbCtLb0JuRW1wZVltMW9NWkFpQURZTUljbnRucHVha0ZvWG5KMmVrUW9YWVFuT0xFMHVxMEhSekZ1V1g2OEZNNEFXWjBBQWsvdi8vL3cvZG11U2N4R0tZTlRCQnJwVEVra1M5dENLZ2ZpQVBYUXQ3ZmtGSlpuNGVVQk1UeUtPc2FKb1ppOUFFQkVyelFDNUowVTNPS00zTDFqVTFCOWtBbG9jQVhpaWJDWlVOc3BQcFA5UXNWcGh2VS9QU00vTmdmbWZOU1V4S3pZRnkrSUJlQnZ0WXI2QW9NNjhFNWhXZ2FMRmVTWDVKSWt3ZFYzSitEa3dFN0RtR2Z3RDRGR2pHNFFFQUFBPT0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["KielerWoche"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Umsatz"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"260.5592"},{"1":"NA","2":"205.5523"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IEdlc2FtdHVtc2F0eiB+IGFzLmZhY3RvcihXb2NoZW50YWcpICsgS2llbGVyV29jaGUsIFxuICAgIGRhdGEgPSBtb2RlbF9kYXRhKVxuXG5SZXNpZHVhbHM6XG4gICAgTWluICAgICAgMVEgIE1lZGlhbiAgICAgIDNRICAgICBNYXggXG4tNDY3LjY4IC0xNzQuMTMgIC00Ni43MyAgMTE4Ljk3IDIxNzAuODcgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHQgdmFsdWUgUHIoPnx0fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgICAgICAgIDk1My4wNTEgICAgICA2LjM3OCAxNDkuNDMwICA8IDJlLTE2ICoqKlxuYXMuZmFjdG9yKFdvY2hlbnRhZylEb25uZXJzdGFnICAgMzkuNzIyICAgICAgOS4wMDMgICA0LjQxMiAxLjAzZS0wNSAqKipcbmFzLmZhY3RvcihXb2NoZW50YWcpRnJlaXRhZyAgICAgIDQ3Ljg1OCAgICAgIDkuMDQ0ICAgNS4yOTIgMS4yM2UtMDcgKioqXG5hcy5mYWN0b3IoV29jaGVudGFnKU1pdHR3b2NoICAgICAtNi43MDUgICAgICA5LjAzMCAgLTAuNzQzIDAuNDU3Nzc4ICAgIFxuYXMuZmFjdG9yKFdvY2hlbnRhZylNb250YWcgICAgICAgMzIuNDkwICAgICAgOS4wMjAgICAzLjYwMiAwLjAwMDMxNyAqKipcbmFzLmZhY3RvcihXb2NoZW50YWcpU2Ftc3RhZyAgICAgMjcwLjcwNyAgICAgIDkuMDA1ICAzMC4wNjIgIDwgMmUtMTYgKioqXG5hcy5mYWN0b3IoV29jaGVudGFnKVNvbm50YWcgICAgIDMxMS4xNzkgICAgICA4Ljk5NyAgMzQuNTg4ICA8IDJlLTE2ICoqKlxuS2llbGVyV29jaGUgICAgICAgICAgICAgICAgICAgICAxOTcuODA3ICAgICAxNy4wMzQgIDExLjYxMyAgPCAyZS0xNiAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5SZXNpZHVhbCBzdGFuZGFyZCBlcnJvcjogMjUxLjQgb24gMTA4NzYgZGVncmVlcyBvZiBmcmVlZG9tXG5NdWx0aXBsZSBSLXNxdWFyZWQ6ICAwLjIwNTYsXHRBZGp1c3RlZCBSLXNxdWFyZWQ6ICAwLjIwNSBcbkYtc3RhdGlzdGljOiAgIDQwMiBvbiA3IGFuZCAxMDg3NiBERiwgIHAtdmFsdWU6IDwgMi4yZS0xNlxuIn0= -->
+<pre><code>
+Call:
+lm(formula = Gesamtumsatz ~ as.factor(Wochentag) + KielerWoche, 
+    data = model_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-467.68 -174.13  -46.73  118.97 2170.87 
+
+Coefficients:
+                               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                     953.051      6.378 149.430  &lt; 2e-16 ***
+as.factor(Wochentag)Donnerstag   39.722      9.003   4.412 1.03e-05 ***
+as.factor(Wochentag)Freitag      47.858      9.044   5.292 1.23e-07 ***
+as.factor(Wochentag)Mittwoch     -6.705      9.030  -0.743 0.457778    
+as.factor(Wochentag)Montag       32.490      9.020   3.602 0.000317 ***
+as.factor(Wochentag)Samstag     270.707      9.005  30.062  &lt; 2e-16 ***
+as.factor(Wochentag)Sonntag     311.179      8.997  34.588  &lt; 2e-16 ***
+KielerWoche                     197.807     17.034  11.613  &lt; 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 251.4 on 10876 degrees of freedom
+Multiple R-squared:  0.2056,    Adjusted R-squared:  0.205 
+F-statistic:   402 on 7 and 10876 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCmRlc2NyaXB0aW9uOiAiWnUgamVkZW0gRGF0dW0gZWluZSBkaWNob3RvbWUgVmFyaWFibGUgaGluenVnZWbDvGd0LCBvYiBhbiBkaWVzZW0gVGFnIEtpV28gd2FyLiINCmF1dGhvcjogIkZlbGl4Ig0KLS0tDQoNCg0KDQpgYGB7ciwgbWVzc2FnZT1GQUxTRX0NCmxpYnJhcnkocmVhZHIpDQpsaWJyYXJ5KGdncGxvdDIpDQpsaWJyYXJ5KGRwbHlyKQ0KDQpgYGANCg0KYGBge3IsIG1lc3NhZ2U9RkFMU0V9DQpraXdvIDwtIHJlYWRfY3N2KCdraXdvLmNzdicpDQp1bXNhdHogPC0gcmVhZF9jc3YoJ3Vtc2F0emRhdGVuX2dla3Vlcnp0LmNzdicpDQojc3VtbWFyeShraXdvKQ0KDQp1bXNhdHogPC0gbGVmdF9qb2luKHVtc2F0eixraXdvKQ0KDQpgYGANCg0KYGBge3J9DQpncm91cF9ieSh1bXNhdHosIEtpZWxlcldvY2hlKSAlPiUgc3VtbWFyaXNlKFVtc2F0eiA9IG1lYW4oVW1zYXR6KSkNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCmRlc2NyaXB0aW9uOiAiWnUgamVkZW0gRGF0dW0gZWluZSBkaWNob3RvbWUgVmFyaWFibGUgaGluenVnZWbDvGd0LCBvYiBhbiBkaWVzZW0gVGFnIEtpV28gd2FyLiINCmF1dGhvcjogIkZlbGl4Ig0KLS0tDQoNCg0KDQpgYGB7ciwgbWVzc2FnZT1GQUxTRX0NCmxpYnJhcnkocmVhZHIpDQpsaWJyYXJ5KGdncGxvdDIpDQpsaWJyYXJ5KGRwbHlyKQ0KbGlicmFyeShndG9vbHMpDQpgYGANCg0KYGBge3IsIG1lc3NhZ2U9RkFMU0V9DQpraXdvIDwtIHJlYWRfY3N2KCdraXdvLmNzdicpDQp1bXNhdHogPC0gcmVhZF9jc3YoJ3Vtc2F0emRhdGVuX2dla3Vlcnp0LmNzdicpDQoNCiNEaWUgVmFyaWFibGUgS2llbGVyV29jaGUgbWl0IDEgdW5kIDAgZWluZsO8Z2VuOyBtdXNzIHNww6R0ZXIgbm9jaCBtaXQgYXMuZmFjdG9yKCkgYmVoYW5kZWx0IHdlcmRlbg0KdW1zYXR6IDwtIGxlZnRfam9pbih1bXNhdHosa2l3bykgJT4lIG11dGF0ZShXb2NoZW50YWcgPSB3ZWVrZGF5cyhEYXR1bSkpDQp1bXNhdHokS2llbGVyV29jaGUgPC0gbmEucmVwbGFjZSh1bXNhdHokS2llbGVyV29jaGUsIDApDQoNCmBgYA0KDQpgYGB7cn0NCiNncm91cGVkIDwtIGdyb3VwX2J5KHVtc2F0eiwgRGF0dW0pICU+JSBzdW1tYXJpc2UoVW1zYXR6ID0gbWVhbihVbXNhdHopLCBXb2NoZW50YWcgPSBXb2NoZW50YWcsIEtpV28gPSBLaWVsZXJXb2NoZSkNCg0KI2hlYWQoZ3JvdXBlZCkNCmdyb3VwZWQgPC0gZ3JvdXBfYnkodW1zYXR6LCBEYXR1bSklPiVzdW1tYXJpc2UoR2VzYW10dW1zYXR6PXN1bShVbXNhdHopKQ0KDQptb2RlbF9kYXRhIDwtIGlubmVyX2pvaW4odW1zYXR6LCBncm91cGVkLCBieSA9ICJEYXR1bSIpICU+JSBzZWxlY3QoRGF0dW0sIEdlc2FtdHVtc2F0eiwgV29jaGVudGFnLCBLaWVsZXJXb2NoZSkNCg0KaGVhZChtb2RlbF9kYXRhKQ0KDQptb2RlbCA8LSBsbShHZXNhbXR1bXNhdHogfiBhcy5mYWN0b3IoV29jaGVudGFnKSArIEtpZWxlcldvY2hlLCBkYXRhPW1vZGVsX2RhdGEpDQpzdW1tYXJ5KG1vZGVsKQ0KDQpgYGANCg0K</div>
 
 
 
