@@ -2,91 +2,112 @@
 title: "R Notebook"
 output: html_notebook
 ---
+To-Do:
+- Pattis und Finns Daten einbinden
+- Problem lösen, wie die Modelle für die einzelnen Warengruppen erstellt werden können
+- - Warengruppe als unabhängige Variable? 
+- - Oder für jede Warengruppe ein eigenes Modell?
+- Problem lösen, das verhindert, dass wir für ein einzelnes Datum eine Prognose berechnen können
+- Plots mit Konfidenzintervallen für zwei Variablen erstellen
+- Mit verschiedenen Modellen herumerxperimentieren, welche den geringsten MAPE haben
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-
-```{r}
-
+Im ersten Block werden alle benötigten Libraries und Tabellen importiert.
+```{r, message=FALSE}
 library(readr)
 library(lubridate)
 library(ggplot2)
 library(dplyr)
+library(gtools)
+library(timeDate)
+library(chron)
+library(e1071)
+library(StatMeasures)
 
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 wetter <- read_csv("wetter.csv")
+```
+
+Im zweiten Block werden die Tabellen gejoint und die Spalten angepasst.
+```{r, message=FALSE}
+#FEIERTAGE
+#scheint noch nicht ganz perfekt zu sein, weil u.a. Karsamstag inkludiert ist
+hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve")
+#TODO: weitere Feiertage raussuchen https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
+feiertage <- data.frame(Datum = as.Date(dates(as.character(holiday(2012:2019,hlist)), format="Y-M-D")))
+feiertage$Feiertag <- 1
+head(feiertage)
+
+#alter Code, der entfernt werden kann, falls er nicht mehr gebraucht wird:
+#Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
+#UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
+
+#JOIN EVERYTHING
+umsatzdaten <- left_join(umsatzdaten, wetter)
+umsatzdaten <- left_join(umsatzdaten, kiwo)
+umsatzdaten$KielerWoche <- na.replace(umsatzdaten$KielerWoche, 0) #damit 0 und nicht "na" steht, wenn keine KiWo ist
+umsatzdaten <- left_join(umsatzdaten, feiertage)
+umsatzdaten$Feiertag <- na.replace(umsatzdaten$Feiertag, 0) #dasselbe bei Feiertagen
+
+#WOCHENTAGE, MONATE UND AS FACTOR
+umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
 
 ```
 
-```{r lesen der csv Dateien}
-wetter <- read_csv("wetter.csv")
+Hier erstelle ich jetzt verschiedene Datasets - Felix
+```{r, message=FALSE}
+#zu Testzwecken haben ich erstmal nur die Warengruppe 1 gefiltert, weil ich nicht weiß, wie das sonst geht
+reg_data <- filter(umsatzdaten, Warengruppe == 1) %>% select(Datum, Umsatz, Wochentag, KielerWoche, Feiertag, Bewoelkung, Temperatur, Windgeschwindigkeit)
 
-kiwo <- read_csv("kiwo.csv")
+#alle Zeilen herausfilter, die irgendwo ein NA haben
+reg_data <- reg_data[complete.cases(reg_data),]
+stopifnot(sum(is.na(reg_data)) == 0)
 
-umsatzdaten_gekuerzt <- read_csv("umsatzdaten_gekuerzt.csv")
-umsatz<-umsatzdaten_gekuerzt
-umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
+#SPLIT TRAINING AND TESTING SETS
+set.seed(1665)
+sample_size <- floor(0.70 * nrow(reg_data)) # 70% - 30%
+sample_ids <- sample(seq_len(nrow(reg_data)), size = sample_size)
 
-Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
-UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
+training_data <- reg_data[sample_ids, ]
+testing_data <- reg_data[-sample_ids, ]
 
 ```
 
-```{r by chris}
-# include weekdays...
-
-library(readr)
-library(dplyr)
-library(lubridate)
-weekdays_holidays <- read_csv("weekdays_holidays.csv")
-weekdays_holidays$Bewoelkung <- NULL
-weekdays_holidays$Temperatur <- NULL
-weekdays_holidays$Windgeschwindigkeit <- NULL
-weekdays_holidays$Wettercode <- NULL
-weekdays_holidays$weekday <- wday(weekdays_holidays$Datum, label = TRUE)
-Join <- dplyr::left_join(weekdays_holidays,Join, by = "Datum")
-
-# install.packages("timeDate","chron")
-library(timeDate)
-library(chron)
-hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve") 
-holidays <- dates(as.character(holiday(2012:2019,hlist)),format="Y-M-D" )
-View(holidays)
-
-#dplyr::left_join(x, y, by = "Datum")
-#rm(hlist, holidays)
-
-# some holidays are missing, check: https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
-# need help to include valuer "holidays" into weekdays_holidays_df
+Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den Trainings- und Testdatensatz berechnet. - Felix
+```{r, message=FALSE}
+#CREATING THE SVM MODEL
+#svm_model <- svm(training_data$Umsatz ~ ., data=training_data)
+#summary(svm_model)
+sum(umsatzdaten$KielerWoche == 1)
+tune_data <- tune(svm, Umsatz ~ Wochentag + KielerWoche + Feiertag +  Bewoelkung + Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3))) 
 
 
-#full table by CM
-UmsatzfullCM <- dplyr::full_join(UKW, weekdays_holidays)
+#ERGEBNISSE
+#print(tune_data)
+best_model <- tune_data[["best.model"]]
+summary(best_model) #epsilon: 0.4, cost: 4
 
-#modell by CM
-modCM <- lm(UmsatzfullCM$Umsatz ~ UmsatzfullCM$Datum + UmsatzfullCM$KielerWoche + UmsatzfullCM$Bewoelkung + UmsatzfullCM$Temperatur + UmsatzfullCM$Temperatur + UmsatzfullCM$Windgeschwindigkeit + UmsatzfullCM$Wettercode + as.factor(UmsatzfullCM$Warengruppe) + as.factor(UmsatzfullCM$weekday))
-summary(modCM)
+#PREDICTIONS
+prediction_training <- predict(best_model, training_data)
+prediction_test <- predict(best_model, newdata=testing_data)
+rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test = mape(prediction_test, testing_data$Umsatz)))
 
-
-#load e1071
-library(e1071)
-
-#set seed
-#indices train
-
-#train data
-#test data(
-
-modSVMCM <- svm(Umsatz ~ Datum, UmsatzfullCM)
-
-#hardcoreSVM svm_tune
-
-pred_test <- predict(modSVMCM$best.model, UmsatzfullCM)
-
-  
-)
 ```
 
+Hier sollte dann die Prognose für neue Daten kommen. - Felix
+```{r, message=FALSE}
+neues_datum <- data.frame(Datum = as.Date("2019-06-04"))
+
+#JOIN EVERYTHING
+neues_datum <- left_join(neues_datum, wetter)
+neues_datum <- left_join(neues_datum, kiwo)
+neues_datum$KielerWoche <- na.replace(neues_datum$KielerWoche, 0) #damit 0 und nicht "na" steht, wenn keine KiWo ist
+neues_datum <- left_join(neues_datum, feiertage)
+neues_datum$Feiertag <- na.replace(neues_datum$Feiertag, 0) #dasselbe bei Feiertagen
+
+#WOCHENTAGE, MONATE UND AS FACTOR
+neues_datum <- mutate(neues_datum, Wochentag = weekdays(Datum), Monat = month(Datum))
+
+head(neues_datum)
+predict(best_model, neues_datum) # das funktioniert nicht (vielleicht weil nur von den Faktoren immer nur eine Ausprägung haben)
+```
