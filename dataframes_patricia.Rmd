@@ -30,7 +30,7 @@ wetter$gefuehlteTemp [wetter$Temperatur > 19.999] = 3
 
 #selektieren uns speichern der Tabelle gefuehlte Temperatur
 gefuehlteTemp <- dplyr::select(wetter, gefuehlteTemp, Datum)
-write.csv2(gefuehlteTemp, "gefuehlte_Temperatur.csv")
+write.csv(gefuehlteTemp, "gefuehlte_Temperatur.csv")
 ```
 
 ```{r kiel macht auf}
@@ -74,7 +74,7 @@ umsatz$Kielmachtauf [umsatz$Datum == "2016-11-04"] = 1
 #selektieren uns speichern der Tabelle kielmacht auf
 kielmachtauf<- dplyr::select(umsatz, Kielmachtauf, Datum)
 
-write.csv2(kielmachtauf, "kielmachtauf.csv")
+write.csv(kielmachtauf, "kielmachtauf.csv")
 ```
 
 ```{r flohmarkt}
@@ -135,7 +135,7 @@ umsatz$flohmarkt [umsatz$Datum == "2013-10-06"] = 1
 
 #selektieren uns speichern der Tabelle flohmarkt
 flohmarkt<- dplyr::select(umsatz, flohmarkt,Datum)
-write.csv2(flohmarkt, "flohmarkt.csv")
+write.csv(flohmarkt, "flohmarkt.csv")
 ```
 
 ```{r regression}
