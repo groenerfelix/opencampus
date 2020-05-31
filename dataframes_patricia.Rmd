@@ -29,13 +29,13 @@ wetter$gefuehlteTemp [wetter$Temperatur > 9.999] = 2
 wetter$gefuehlteTemp [wetter$Temperatur > 19.999] = 3
 
 #selektieren uns speichern der Tabelle gefuehlte Temperatur
-gefuehlteTemp <- dplyr::select(wetter, gefuehlteTemp)
+gefuehlteTemp <- dplyr::select(wetter, gefuehlteTemp, Datum)
 write.csv2(gefuehlteTemp, "gefuehlte_Temperatur.csv")
 ```
 
 ```{r kiel macht auf}
 #erstellen der Tabelle Kielmachtauf
-umsatz$Kielmachtauf <- NA
+umsatz$Kielmachtauf <- 0
 umsatz$Kielmachtauf [umsatz$Datum == "2019-03-03"] = 1
 umsatz$Kielmachtauf [umsatz$Datum == "2019-04-27"] = 1
 umsatz$Kielmachtauf [umsatz$Datum == "2019-10-03"] = 1
@@ -72,14 +72,14 @@ umsatz$Kielmachtauf [umsatz$Datum == "2016-10-07"] = 1
 umsatz$Kielmachtauf [umsatz$Datum == "2016-11-04"] = 1
 
 #selektieren uns speichern der Tabelle kielmacht auf
-kielmachtauf<- dplyr::select(umsatz, Kielmachtauf)
+kielmachtauf<- dplyr::select(umsatz, Kielmachtauf, Datum)
 
 write.csv2(kielmachtauf, "kielmachtauf.csv")
 ```
 
 ```{r flohmarkt}
 #erstellen einer neuen Spalte
-umsatz$flohmarkt <- NA
+umsatz$flohmarkt <- 0
 umsatz$flohmarkt [umsatz$Datum == "2019-04-07"] = 1
 umsatz$flohmarkt [umsatz$Datum == "2019-04-28"] = 1
 umsatz$flohmarkt [umsatz$Datum == "2019-05-05"] = 1
@@ -134,7 +134,7 @@ umsatz$flohmarkt [umsatz$Datum == "2013-04-07"] = 1
 umsatz$flohmarkt [umsatz$Datum == "2013-10-06"] = 1
 
 #selektieren uns speichern der Tabelle flohmarkt
-flohmarkt<- dplyr::select(umsatz, flohmarkt)
+flohmarkt<- dplyr::select(umsatz, flohmarkt,Datum)
 write.csv2(flohmarkt, "flohmarkt.csv")
 ```
 
