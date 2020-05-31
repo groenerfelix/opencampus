@@ -3,11 +3,10 @@ title: "R Notebook"
 output: html_notebook
 ---
 To-Do:
-- Pattis und Finns Daten einbinden
+- Pattis, Finns und weitere Daten einbinden. Weitere Feiertage verwenden.
 - Problem lösen, wie die Modelle für die einzelnen Warengruppen erstellt werden können
-- - Warengruppe als unabhängige Variable? 
-- - Oder für jede Warengruppe ein eigenes Modell?
-- Problem lösen, das verhindert, dass wir für ein einzelnes Datum eine Prognose berechnen können
+- - Warengruppe als unabhängige Variable? (Vielleicht als WGxTemp + WGxWochentag + ...)
+- - Oder für jede Warengruppe ein eigenes Modell? (Das würde ich vorziehen)
 - Plots mit Konfidenzintervallen für zwei Variablen erstellen
 - Mit verschiedenen Modellen herumerxperimentieren, welche den geringsten MAPE haben
 
@@ -78,7 +77,7 @@ Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den 
 #CREATING THE SVM MODEL
 #svm_model <- svm(training_data$Umsatz ~ ., data=training_data)
 #summary(svm_model)
-sum(umsatzdaten$KielerWoche == 1)
+#sum(umsatzdaten$KielerWoche == 1)
 tune_data <- tune(svm, Umsatz ~ Wochentag + KielerWoche + Feiertag +  Bewoelkung + Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3))) 
 
 
@@ -88,7 +87,7 @@ best_model <- tune_data[["best.model"]]
 summary(best_model) #epsilon: 0.4, cost: 4
 
 #PREDICTIONS
-prediction_training <- predict(best_model, training_data)
+prediction_training <- predict(best_model)
 prediction_test <- predict(best_model, newdata=testing_data)
 rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test = mape(prediction_test, testing_data$Umsatz)))
 
@@ -96,7 +95,7 @@ rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test 
 
 Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
-neues_datum <- data.frame(Datum = as.Date("2019-06-04"))
+neues_datum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-12-31"), by = "day"))
 
 #JOIN EVERYTHING
 neues_datum <- left_join(neues_datum, wetter)
@@ -106,8 +105,17 @@ neues_datum <- left_join(neues_datum, feiertage)
 neues_datum$Feiertag <- na.replace(neues_datum$Feiertag, 0) #dasselbe bei Feiertagen
 
 #WOCHENTAGE, MONATE UND AS FACTOR
-neues_datum <- mutate(neues_datum, Wochentag = weekdays(Datum), Monat = month(Datum))
+neues_datum <- mutate(neues_datum, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
+#lapply(neues_datum, nlevels)
+#alle Zeilen herausfilter, die irgendwo ein NA haben
+neues_datum <- neues_datum[complete.cases(neues_datum),]
 
-head(neues_datum)
-predict(best_model, neues_datum) # das funktioniert nicht (vielleicht weil nur von den Faktoren immer nur eine Ausprägung haben)
+#die restlichen Umsätze für 2019 berechnen
+neues_datum$Umsatz <- predict(best_model, newdata=neues_datum)
+
+#Hier das zu berechnende Datum heraussuchen
+filter(neues_datum, Datum == as.Date("2019-06-04"))
+
+#ERKLÄRUNG: Wir müssen dem Umsatz für viel mehr als nur ein Datum prognostizieren, damit von allen Faktorvariablen auch mindestens zwei Ausprägungen vorhanden sind (also Kieler Woche und Feiertage müssen enthalten sein)
+
 ```
