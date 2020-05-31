@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 To-Do:
-- Pattis, Finns und weitere Daten einbinden. Weitere Feiertage verwenden.
+- Pattis, Finns und weitere Daten einbinden.
 - Problem lösen, wie die Modelle für die einzelnen Warengruppen erstellt werden können
 - - Warengruppe als unabhängige Variable? (Vielleicht als WGxTemp + WGxWochentag + ...)
 - - Oder für jede Warengruppe ein eigenes Modell? (Das würde ich vorziehen)
@@ -25,13 +25,17 @@ library(StatMeasures)
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 wetter <- read_csv("wetter.csv")
+#flohmarkt <- read_csv("flohmarkt.csv")
+#gefuehlteTemp <- read_csv("gefuehlte_Temperatur.csv")
+#kielmachtauf <- read_csv("kielmachtauf.csv")
 ```
 
 Im zweiten Block werden die Tabellen gejoint und die Spalten angepasst.
 ```{r, message=FALSE}
 #FEIERTAGE
 #scheint noch nicht ganz perfekt zu sein, weil u.a. Karsamstag inkludiert ist
-hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve")
+#hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve")
+hlist <- c("EasterSunday","EasterMonday","Ascension", "PentecostMonday","DEGermanUnity","ChristmasDay", "NewYearsDay")
 #TODO: weitere Feiertage raussuchen https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
 feiertage <- data.frame(Datum = as.Date(dates(as.character(holiday(2012:2019,hlist)), format="Y-M-D")))
 feiertage$Feiertag <- 1
@@ -47,9 +51,12 @@ umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- na.replace(umsatzdaten$KielerWoche, 0) #damit 0 und nicht "na" steht, wenn keine KiWo ist
 umsatzdaten <- left_join(umsatzdaten, feiertage)
 umsatzdaten$Feiertag <- na.replace(umsatzdaten$Feiertag, 0) #dasselbe bei Feiertagen
-
+#umsatzdaten <- left_join(umsatzdaten, kielmachtauf)
+#umsatzdaten <- left_join(umsatzdaten, flohmarkt)
+#umsatzdaten <- left_join(umsatzdaten, gefuehlteTemp, by="Datum")
+head(umsatzdaten)
 #WOCHENTAGE, MONATE UND AS FACTOR
-umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
+umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))#, Flohmarkt = as.factor(flohmarkt), Kielmachtauf = as.factor(Kielmachtauf))
 
 ```
 
@@ -95,7 +102,7 @@ rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test 
 
 Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
-neues_datum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-12-31"), by = "day"))
+neues_datum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-08-01"), by = "day"))
 
 #JOIN EVERYTHING
 neues_datum <- left_join(neues_datum, wetter)
