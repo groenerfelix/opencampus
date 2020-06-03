@@ -3,11 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 To-Do:
-- Pattis, Finns und weitere Daten einbinden.
-- Problem lösen, wie die Modelle für die einzelnen Warengruppen erstellt werden können
-- - Warengruppe als unabhängige Variable? (Vielleicht als WGxTemp + WGxWochentag + ...)
-- - Oder für jede Warengruppe ein eigenes Modell? (Das würde ich vorziehen)
-- Plots mit Konfidenzintervallen für zwei Variablen erstellen
+- Pattis und Finns Daten sowie weitere Feiertage einbinden.
 - Mit verschiedenen Modellen herumerxperimentieren, welche den geringsten MAPE haben
 
 Im ersten Block werden alle benötigten Libraries und Tabellen importiert.
@@ -33,17 +29,16 @@ wetter <- read_csv("wetter.csv")
 Im zweiten Block werden die Tabellen gejoint und die Spalten angepasst.
 ```{r, message=FALSE}
 #FEIERTAGE
-#scheint noch nicht ganz perfekt zu sein, weil u.a. Karsamstag inkludiert ist
-#hlist <- c("Easter","DEAscension","DEGermanUnity","DEChristmasEve","DENewYearsEve")
-hlist <- c("EasterSunday","EasterMonday","Ascension", "PentecostMonday","DEGermanUnity","ChristmasDay", "NewYearsDay")
-#TODO: weitere Feiertage raussuchen https://zufish.schleswig-holstein.de/detail?areaId=&pstId=8967760&ouId=&infotype=0
+#(die, die immer auf Sonntag fallen, und Weihnachten habe ich ausgeschlossen)
+hlist <- c("EasterMonday","Ascension", "PentecostMonday","DEGermanUnity", "NewYearsDay", "USGoodFriday")
+feiertags_liste <- as.Date(dates(as.character(holiday(2012:2019,hlist)), format="Y-M-D")) # die obenstehenden Feiertage
+feiertags_liste <- append(feiertags_liste, seq.dates("05/01/2012", "05/01/2019", by = "year")) # Tag der Arbeit
+feiertags_liste <- append(feiertags_liste, seq.dates("10/31/2017", "10/31/2019", by = "year")) # Reformationstag
+
+
 feiertage <- data.frame(Datum = as.Date(dates(as.character(holiday(2012:2019,hlist)), format="Y-M-D")))
 feiertage$Feiertag <- 1
 head(feiertage)
-
-#alter Code, der entfernt werden kann, falls er nicht mehr gebraucht wird:
-#Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
-#UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
 
 #JOIN EVERYTHING
 umsatzdaten <- left_join(umsatzdaten, wetter)
@@ -63,7 +58,8 @@ umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat
 Hier erstelle ich jetzt verschiedene Datasets - Felix
 ```{r, message=FALSE}
 #zu Testzwecken haben ich erstmal nur die Warengruppe 1 gefiltert, weil ich nicht weiß, wie das sonst geht
-reg_data <- filter(umsatzdaten, Warengruppe == 1) %>% select(Datum, Umsatz, Wochentag, KielerWoche, Feiertag, Bewoelkung, Temperatur, Windgeschwindigkeit)
+#reg_data <- filter(umsatzdaten, Warengruppe == 1) %>% 
+  reg_data <- select(umsatzdaten, Datum, Warengruppe, Umsatz, Wochentag, KielerWoche, Feiertag, Bewoelkung, Temperatur, Windgeschwindigkeit)
 
 #alle Zeilen herausfilter, die irgendwo ein NA haben
 reg_data <- reg_data[complete.cases(reg_data),]
@@ -85,8 +81,7 @@ Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den 
 #svm_model <- svm(training_data$Umsatz ~ ., data=training_data)
 #summary(svm_model)
 #sum(umsatzdaten$KielerWoche == 1)
-tune_data <- tune(svm, Umsatz ~ Wochentag + KielerWoche + Feiertag +  Bewoelkung + Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3))) 
-
+tune_data <- tune(svm, Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Bewoelkung + Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3))) 
 
 #ERGEBNISSE
 #print(tune_data)
@@ -99,6 +94,7 @@ prediction_test <- predict(best_model, newdata=testing_data)
 rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test = mape(prediction_test, testing_data$Umsatz)))
 
 ```
+
 
 Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
