@@ -41,10 +41,6 @@ feiertage <- data.frame(Datum = as.Date(dates(as.character(holiday(2012:2019,hli
 feiertage$Feiertag <- 1
 head(feiertage)
 
-#alter Code, der entfernt werden kann, falls er nicht mehr gebraucht wird:
-#Join<-dplyr::full_join(kiwo,wetter, by = "Datum")
-#UKW<-dplyr::full_join(Join,umsatz, by = "Datum")
-
 #JOIN EVERYTHING
 umsatzdaten <- left_join(umsatzdaten, wetter)
 umsatzdaten <- left_join(umsatzdaten, kiwo)
