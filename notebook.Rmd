@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 To-Do:
-- Pattis und Finns Daten sowie weitere Feiertage einbinden.
+- Pattis gefühlte Temperatur und Wettercode sowie Finns Jahreszeiten einbinden.
 - Mit verschiedenen Modellen herumerxperimentieren, welche den geringsten MAPE haben
 
 Im ersten Block werden alle benötigten Libraries und Tabellen importiert.
@@ -17,13 +17,14 @@ library(timeDate)
 library(chron)
 library(e1071)
 library(StatMeasures)
+library(tidyr)
 
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 wetter <- read_csv("wetter.csv")
-#flohmarkt <- read_csv("flohmarkt.csv")
+flohmarkt <- read_csv("flohmarkt.csv")
 #gefuehlteTemp <- read_csv("gefuehlte_Temperatur.csv")
-#kielmachtauf <- read_csv("kielmachtauf.csv")
+kielmachtauf <- read_csv("kielmachtauf.csv")
 ```
 
 Im zweiten Block werden die Tabellen gejoint und die Spalten angepasst.
@@ -46,20 +47,21 @@ umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- na.replace(umsatzdaten$KielerWoche, 0) #damit 0 und nicht "na" steht, wenn keine KiWo ist
 umsatzdaten <- left_join(umsatzdaten, feiertage)
 umsatzdaten$Feiertag <- na.replace(umsatzdaten$Feiertag, 0) #dasselbe bei Feiertagen
-#umsatzdaten <- left_join(umsatzdaten, kielmachtauf)
-#umsatzdaten <- left_join(umsatzdaten, flohmarkt)
+umsatzdaten <- left_join(umsatzdaten, kielmachtauf)
+umsatzdaten$Kielmachtauf <- na.replace(umsatzdaten$Kielmachtauf, 0) 
+umsatzdaten <- left_join(umsatzdaten, flohmarkt)
+umsatzdaten$Flohmarkt <- na.replace(umsatzdaten$Flohmarkt, 0) 
+
 #umsatzdaten <- left_join(umsatzdaten, gefuehlteTemp, by="Datum")
 head(umsatzdaten)
 #WOCHENTAGE, MONATE UND AS FACTOR
-umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))#, Flohmarkt = as.factor(flohmarkt), Kielmachtauf = as.factor(Kielmachtauf))
+umsatzdaten <- mutate(umsatzdaten, Warengruppe = as.factor(Warengruppe), Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche), Flohmarkt = as.factor(Flohmarkt), Kielmachtauf = as.factor(Kielmachtauf))
 
 ```
 
 Hier erstelle ich jetzt verschiedene Datasets - Felix
 ```{r, message=FALSE}
-#zu Testzwecken haben ich erstmal nur die Warengruppe 1 gefiltert, weil ich nicht weiß, wie das sonst geht
-#reg_data <- filter(umsatzdaten, Warengruppe == 1) %>% 
-  reg_data <- select(umsatzdaten, Datum, Warengruppe, Umsatz, Wochentag, KielerWoche, Feiertag, Bewoelkung, Temperatur, Windgeschwindigkeit)
+reg_data <- select(umsatzdaten, Datum, Warengruppe, Umsatz, Wochentag, KielerWoche, Feiertag, Kielmachtauf, Flohmarkt, Bewoelkung, Temperatur, Windgeschwindigkeit)
 
 #alle Zeilen herausfilter, die irgendwo ein NA haben
 reg_data <- reg_data[complete.cases(reg_data),]
@@ -75,18 +77,30 @@ testing_data <- reg_data[-sample_ids, ]
 
 ```
 
+Hier werden die Variablen in einem linearen Modell auf ihre Relevanz geprüft
+```{r}
+linMod <- lm(Umsatz ~ ., data=reg_data)
+linMod <- lm(Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Temperatur + Windgeschwindigkeit, data=reg_data)
+linMod <- lm(Umsatz ~ Warengruppe * Wochentag + Warengruppe *KielerWoche + Warengruppe *Feiertag +  Warengruppe *Temperatur + Warengruppe *Windgeschwindigkeit, data=reg_data)
+
+summary(linMod)
+
+```
+
+
 Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den Trainings- und Testdatensatz berechnet. - Felix
 ```{r, message=FALSE}
 #CREATING THE SVM MODEL
 #svm_model <- svm(training_data$Umsatz ~ ., data=training_data)
 #summary(svm_model)
-#sum(umsatzdaten$KielerWoche == 1)
-tune_data <- tune(svm, Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Bewoelkung + Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3))) 
+#tune_data <- tune(svm, Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0, 1, 0.1), cost = 2^(1:2))) #original: 0.2, 1, 0.1, 2^(2:3)
 
+tune_data <- tune(svm, Umsatz ~ Warengruppe * Wochentag + KielerWoche + Feiertag +  Warengruppe * Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 0.3, 0.02), cost = 2^(2:2))) #original: 0, 0.3, 0.05, 2^(1:2)
+#0.1933 mit cost: 4, epsislon: 0.24
 #ERGEBNISSE
 #print(tune_data)
 best_model <- tune_data[["best.model"]]
-summary(best_model) #epsilon: 0.4, cost: 4
+summary(best_model) 
 
 #PREDICTIONS
 prediction_training <- predict(best_model)
@@ -98,7 +112,12 @@ rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test 
 
 Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
-neues_datum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-08-01"), by = "day"))
+neuer_zeitraum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-08-01"), by = "day"))
+
+#TODO: für jedes Datum noch die sechs Warengruppen hinzufügen
+neues_datum <- expand(neuer_zeitraum, Datum, Warengruppe = (1:6))
+#neues_datum <- neuer_zeitraum %>% mutate(Warengruppe)
+#neues_datum <- append(neues_datum, mutate(neuer_zeitraum, Warengruppe = 2))
 
 #JOIN EVERYTHING
 neues_datum <- left_join(neues_datum, wetter)
@@ -108,10 +127,18 @@ neues_datum <- left_join(neues_datum, feiertage)
 neues_datum$Feiertag <- na.replace(neues_datum$Feiertag, 0) #dasselbe bei Feiertagen
 
 #WOCHENTAGE, MONATE UND AS FACTOR
-neues_datum <- mutate(neues_datum, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
+neues_datum <- mutate(neues_datum, Warengruppe = as.factor(Warengruppe), Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
 #lapply(neues_datum, nlevels)
+
 #alle Zeilen herausfilter, die irgendwo ein NA haben
 neues_datum <- neues_datum[complete.cases(neues_datum),]
+
+#neues_datum <- left_join(neues_datum, umsatzdaten)
+head(neues_datum)
+
+#str(training_data)
+#str(testing_data)
+#str(neues_datum)
 
 #die restlichen Umsätze für 2019 berechnen
 neues_datum$Umsatz <- predict(best_model, newdata=neues_datum)

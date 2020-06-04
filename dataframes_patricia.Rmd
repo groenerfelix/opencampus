@@ -83,69 +83,69 @@ write_csv(kielmachtauf, "kielmachtauf.csv")
 
 ```{r flohmarkt}
 #erstellen einer neuen Spalte
-umsatz$flohmarkt <- 0
-umsatz$flohmarkt [umsatz$Datum == "2019-04-07"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-04-28"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-05-05"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-05-26"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-06-02"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-07-07"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-07-14"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-08-04"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-08-25"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-09-01"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-10-06"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2019-10-13"] = 1
+umsatz$Flohmarkt <- 0
+umsatz$Flohmarkt [umsatz$Datum == "2019-04-07"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-04-28"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-05-05"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-05-26"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-06-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-07-07"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-07-14"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-08-04"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-08-25"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-09-01"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-10-06"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2019-10-13"] = 1
 
-umsatz$flohmarkt [umsatz$Datum == "2018-04-01"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-04-22"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-05-06"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-05-25"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-06-03"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-07-01"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-07-15"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-08-05"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-09-02"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2018-09-30"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-04-01"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-04-22"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-05-06"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-05-25"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-06-03"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-07-01"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-07-15"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-08-05"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-09-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2018-09-30"] = 1
 
-umsatz$flohmarkt [umsatz$Datum == "2017-04-02"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-04-23"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-05-07"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-05-21"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-06-04"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-07-02"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-07-16"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-08-06"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-08-27"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-09-03"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-09-24"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2017-10-01"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-04-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-04-23"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-05-07"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-05-21"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-06-04"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-07-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-07-16"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-08-06"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-08-27"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-09-03"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-09-24"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2017-10-01"] = 1
 
-umsatz$flohmarkt [umsatz$Datum == "2016-04-03"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-04-24"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-05-01"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-05-22"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-06-05"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-07-02"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-07-17"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-08-07"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-08-28"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-09-04"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-09-25"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2016-10-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-04-03"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-04-24"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-05-01"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-05-22"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-06-05"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-07-02"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-07-17"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-08-07"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-08-28"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-09-04"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-09-25"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2016-10-02"] = 1
 
-umsatz$flohmarkt [umsatz$Datum == "2013-04-07"] = 1
-umsatz$flohmarkt [umsatz$Datum == "2013-10-06"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2013-04-07"] = 1
+umsatz$Flohmarkt [umsatz$Datum == "2013-10-06"] = 1
 
-#selektieren uns speichern der Tabelle flohmarkt
-flohmarkt<- dplyr::filter(umsatz, flohmarkt == 1)
-flohmarkt<- dplyr::select(flohmarkt, flohmarkt, Datum)
+#selektieren uns speichern der Tabelle Flohmarkt
+flohmarkt<- dplyr::filter(umsatz, Flohmarkt == 1)
+flohmarkt<- dplyr::select(flohmarkt, Flohmarkt, Datum)
 #write.csv2(flohmarkt, "flohmarkt.csv")
 write_csv(flohmarkt, "flohmarkt.csv")
 ```
 
 ```{r regression}
-mod <- lm(Umsatz ~ flohmarkt + Kielmachtauf + as.factor(Warengruppe), umsatz)
+mod <- lm(Umsatz ~ Flohmarkt + Kielmachtauf + as.factor(Warengruppe), umsatz)
 summary(mod)
 ```
 
