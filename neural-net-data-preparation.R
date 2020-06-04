@@ -64,7 +64,8 @@ get.norm_values <- function (.data, select_columns = NULL) {
 ### Datenimport ####
 
 # Einlesen der Daten
-house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+umsatzdaten <- read_csv("umsatzdaten_final")
+head(umsatzdaten)
 
 
 ###################################################

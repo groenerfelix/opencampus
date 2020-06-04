@@ -54,6 +54,9 @@ head(umsatzdaten)
 #WOCHENTAGE, MONATE UND AS FACTOR
 umsatzdaten <- mutate(umsatzdaten, Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))#, Flohmarkt = as.factor(flohmarkt), Kielmachtauf = as.factor(Kielmachtauf))
 
+#Export der finalen Umsatzdaten als CVS für NN in repo
+write.csv(umsatzdaten, "umsatzdaten_final" , row.names=FALSE)
+
 ```
 
 Hier erstelle ich jetzt verschiedene Datasets - Felix
