@@ -91,12 +91,9 @@ summary(linMod)
 Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den Trainings- und Testdatensatz berechnet. - Felix
 ```{r, message=FALSE}
 #CREATING THE SVM MODEL
-#svm_model <- svm(training_data$Umsatz ~ ., data=training_data)
-#summary(svm_model)
-#tune_data <- tune(svm, Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Temperatur + Windgeschwindigkeit, data=training_data, ranges = list(epsilon = seq(0, 1, 0.1), cost = 2^(1:2))) #original: 0.2, 1, 0.1, 2^(2:3)
+tune_data <- tune(svm, Umsatz ~ Warengruppe * Wochentag + KielerWoche + Feiertag + Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3)))
+#MAPE ca. 0.19 mit cost: 4, epsislon: 0.24
 
-tune_data <- tune(svm, Umsatz ~ Warengruppe * Wochentag + KielerWoche + Feiertag +  Warengruppe * Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 0.3, 0.02), cost = 2^(2:2))) #original: 0, 0.3, 0.05, 2^(1:2)
-#0.1933 mit cost: 4, epsislon: 0.24
 #ERGEBNISSE
 #print(tune_data)
 best_model <- tune_data[["best.model"]]
@@ -114,10 +111,8 @@ Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
 neuer_zeitraum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-08-01"), by = "day"))
 
-#TODO: für jedes Datum noch die sechs Warengruppen hinzufügen
+#für jedes Datum noch die sechs Warengruppen hinzufügen
 neues_datum <- expand(neuer_zeitraum, Datum, Warengruppe = (1:6))
-#neues_datum <- neuer_zeitraum %>% mutate(Warengruppe)
-#neues_datum <- append(neues_datum, mutate(neuer_zeitraum, Warengruppe = 2))
 
 #JOIN EVERYTHING
 neues_datum <- left_join(neues_datum, wetter)
@@ -135,10 +130,6 @@ neues_datum <- neues_datum[complete.cases(neues_datum),]
 
 #neues_datum <- left_join(neues_datum, umsatzdaten)
 head(neues_datum)
-
-#str(training_data)
-#str(testing_data)
-#str(neues_datum)
 
 #die restlichen Umsätze für 2019 berechnen
 neues_datum$Umsatz <- predict(best_model, newdata=neues_datum)
