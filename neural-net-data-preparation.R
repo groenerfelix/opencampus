@@ -64,25 +64,33 @@ get.norm_values <- function (.data, select_columns = NULL) {
 ### Datenimport ####
 
 # Einlesen der Daten
-house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+umsatzdaten <- read_csv("umsatzdaten_final.csv")
 
 
 ###################################################
 ### Datenaufbereitung ####
 
 # Rekodierung von kategoriellen Variablen (zu Dummy-Variablen)
-dummy_list <- c("view", "condition")
-house_pricing_dummy = dummy_cols(house_pricing, dummy_list)
+dummy_list <- c("Warengruppe", "Wochentag")
+umsatzdaten_dummy = dummy_cols(umsatzdaten, dummy_list)
+#potenziell: gefuehlte Temp, Monat
 
 # Definition von Variablenlisten für die Dummies, um das Arbeiten mit diesen zu erleichtern
-condition_dummies = c('condition_1', 'condition_2', 'condition_3', 'condition_4', 'condition_5')
-view_dummies = c('view_0', 'view_1', 'view_2', 'view_3','view_4')
+warengruppe_dummies = c('Brot', 'Brötchen', 'Croissant', 'Konditorei', 'Kuchen', 'Saisonbrot')
+wochentag_dummies = c('Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag', 'Samstag', 'Sonntag')
 
 
 # Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("price", "sqft_lot", "bathrooms", "grade", "waterfront", view_dummies, condition_dummies) # Liste aller Variablen
-norm_values_list <- get.norm_values(house_pricing_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
-house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standardisierung der Variablen
+norm_list <- c("Umsatz", "Warengruppe", "Bewoelkung", "Temperatur", "Windgeschwindigkeit", "KielerWoche",
+               "Feiertag", "Kielmachtauf", "Flohmarkt", "gefuehlteTemp", "Monat") # Liste aller Variablen
+#### Probleme ####
+# "Datum" - falsches Format, 
+# "Wochentag" - as.factor kodieren,
+# Dummies laufen nicht durch: warengruppe_dummies, wochentag_dummies.... den part insgesamt immer auch unten anpassen!
+
+
+norm_values_list <- get.norm_values(umsatzdaten_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
+umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisierung der Variablen
 
 
 
@@ -90,25 +98,26 @@ house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standar
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c('sqft_lot', 'waterfront', 'grade', 'bathrooms', view_dummies, condition_dummies)
+features = c("Datum", "Warengruppe", "Bewoelkung", "Temperatur", "Windgeschwindigkeit", "KielerWoche",
+             "Feiertag", "Kielmachtauf", "Flohmarkt", "gefuehlteTemp", "Wochentag", "Monat")
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
-label = 'price'
+label = 'Umsatz'
 
 
 ###################################################
 ### Definition von Trainings- und Testdatensatz ####
 
 # Zufallszähler setzen, um die zufällige Partitionierung bei jedem Durchlauf gleich zu halten
-set.seed(1)
+set.seed(43879)
 # Bestimmung der Indizes des Traininsdatensatzes
-train_ind <- sample(seq_len(nrow(house_pricing_norm)), size = floor(0.66 * nrow(house_pricing_norm)))
+train_ind <- sample(seq_len(nrow(umsatzdaten_norm)), size = floor(0.66 * nrow(umsatzdaten_norm)))
 
 # Teilen in Trainings- und Testdatensatz
-train_dataset = house_pricing_norm[train_ind, features]
-test_dataset = house_pricing_norm[-train_ind, features]
+train_dataset = umsatzdaten_norm[train_ind, features]
+test_dataset = umsatzdaten_norm[-train_ind, features]
 
 # Selektion der Variable, die als Label definiert wurde
-train_labels = house_pricing_norm[train_ind, label]
-test_labels = house_pricing_norm[-train_ind, label]
+train_labels = umsatzdaten_norm[train_ind, label]
+test_labels = umsatzdaten_norm[-train_ind, label]
 
 
