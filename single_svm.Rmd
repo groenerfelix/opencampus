@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 To-Do:
-- Pattis gefühlte Temperatur und Wettercode sowie Finns Jahreszeiten einbinden.
+- Pattis gefühlte Temperatur sowie Finns Jahreszeiten einbinden.
 - Mit verschiedenen Modellen herumerxperimentieren, welche den geringsten MAPE haben
 
 Im ersten Block werden alle benötigten Libraries und Tabellen importiert.
@@ -23,9 +23,10 @@ umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 wetter <- read_csv("wetter.csv")
 flohmarkt <- read_csv("flohmarkt.csv")
-#gefuehlteTemp <- read_csv("gefuehlte_Temperatur.csv")
+gefuehlteTemp <- read_csv("gefuehlte_Temperatur.csv")
 kielmachtauf <- read_csv("kielmachtauf.csv")
 ```
+
 
 Im zweiten Block werden die Tabellen gejoint und die Spalten angepasst.
 ```{r, message=FALSE}
@@ -36,13 +37,18 @@ feiertags_liste <- as.Date(dates(as.character(holiday(2012:2019,hlist)), format=
 feiertags_liste <- append(feiertags_liste, seq.dates("05/01/2012", "05/01/2019", by = "year")) # Tag der Arbeit
 feiertags_liste <- append(feiertags_liste, seq.dates("10/31/2017", "10/31/2019", by = "year")) # Reformationstag
 
-
 feiertage <- data.frame(Datum = as.Date(dates(as.character(holiday(2012:2019,hlist)), format="Y-M-D")))
 feiertage$Feiertag <- 1
 head(feiertage)
 
+#für jedes Datum alle die sechs Warengruppen hinzufügen
+daten <- expand(umsatzdaten, Datum, Warengruppe = (1:6))
+umsatzdaten <- left_join(daten, umsatzdaten)
+umsatzdaten$Umsatz <- na.replace(umsatzdaten$Umsatz, 0) #na mit 0 ersetzen
+
+
 #JOIN EVERYTHING
-umsatzdaten <- left_join(umsatzdaten, wetter)
+umsatzdaten <- left_join(umsatzdaten, wetter) #Wettercode hat zu viele NAs
 umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- na.replace(umsatzdaten$KielerWoche, 0) #damit 0 und nicht "na" steht, wenn keine KiWo ist
 umsatzdaten <- left_join(umsatzdaten, feiertage)
@@ -52,16 +58,30 @@ umsatzdaten$Kielmachtauf <- na.replace(umsatzdaten$Kielmachtauf, 0)
 umsatzdaten <- left_join(umsatzdaten, flohmarkt)
 umsatzdaten$Flohmarkt <- na.replace(umsatzdaten$Flohmarkt, 0) 
 
-#umsatzdaten <- left_join(umsatzdaten, gefuehlteTemp, by="Datum")
-head(umsatzdaten)
+umsatzdaten <- left_join(umsatzdaten, gefuehlteTemp)
+
 #WOCHENTAGE, MONATE UND AS FACTOR
 umsatzdaten <- mutate(umsatzdaten, Warengruppe = as.factor(Warengruppe), Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche), Flohmarkt = as.factor(Flohmarkt), Kielmachtauf = as.factor(Kielmachtauf))
 
+umsatzdaten$Jahreszeit [umsatzdaten$Monat %in% c(1, 11, 12)] = "Winter"
+umsatzdaten$Jahreszeit [umsatzdaten$Monat %in% c(2, 3, 4)] = "Frühling"
+umsatzdaten$Jahreszeit [umsatzdaten$Monat %in% c(5, 6, 7)] = "Sommer"
+umsatzdaten$Jahreszeit [umsatzdaten$Monat %in% c(8, 9, 10)] = "Herbst"
+
+umsatzdaten$Saison <- 0
+umsatzdaten$Saison [umsatzdaten$Monat %in% c(1, 10, 11, 12)] <- 1
+
+umsatzdaten <- mutate(umsatzdaten, Jahreszeit = as.factor(Jahreszeit), Saison = as.factor(Saison))
+
+head(umsatzdaten)
+summary(umsatzdaten)
+str(umsatzdaten)
 ```
+
 
 Hier erstelle ich jetzt verschiedene Datasets - Felix
 ```{r, message=FALSE}
-reg_data <- select(umsatzdaten, Datum, Warengruppe, Umsatz, Wochentag, KielerWoche, Feiertag, Kielmachtauf, Flohmarkt, Bewoelkung, Temperatur, Windgeschwindigkeit)
+reg_data <- select(umsatzdaten, Datum, Warengruppe, Umsatz, Wochentag, Monat, Jahreszeit, Saison, KielerWoche, Feiertag, Kielmachtauf, Flohmarkt, Bewoelkung, Temperatur, Windgeschwindigkeit, gefuehlteTemp)
 
 #alle Zeilen herausfilter, die irgendwo ein NA haben
 reg_data <- reg_data[complete.cases(reg_data),]
@@ -80,10 +100,9 @@ testing_data <- reg_data[-sample_ids, ]
 Hier werden die Variablen in einem linearen Modell auf ihre Relevanz geprüft
 ```{r}
 linMod <- lm(Umsatz ~ ., data=reg_data)
-linMod <- lm(Umsatz ~ Warengruppe + Wochentag + KielerWoche + Feiertag +  Temperatur + Windgeschwindigkeit, data=reg_data)
-linMod <- lm(Umsatz ~ Warengruppe * Wochentag + Warengruppe *KielerWoche + Warengruppe *Feiertag +  Warengruppe *Temperatur + Warengruppe *Windgeschwindigkeit, data=reg_data)
 
 summary(linMod)
+#gefühlte Temperatur und Windstärke scheinen keine Signifikanz zu haben
 
 ```
 
@@ -91,8 +110,10 @@ summary(linMod)
 Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den Trainings- und Testdatensatz berechnet. - Felix
 ```{r, message=FALSE}
 #CREATING THE SVM MODEL
-tune_data <- tune(svm, Umsatz ~ Warengruppe * Wochentag + KielerWoche + Feiertag + Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3)))
-#MAPE ca. 0.19 mit cost: 4, epsislon: 0.24
+#summary(training_data)
+tune_data <- tune(svm, Umsatz ~ Wochentag + Warengruppe +  Monat + Saison * Warengruppe + Jahreszeit + KielerWoche + Feiertag + Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(1:3)))
+#niedrigster MAPE mit ca. 0.183 ohne WG6
+#TODO: probieren mit fixed epsilon und cost= 2^(3:5)
 
 #ERGEBNISSE
 #print(tune_data)
@@ -109,10 +130,11 @@ rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test 
 
 Hier sollte dann die Prognose für neue Daten kommen. - Felix
 ```{r, message=FALSE}
-neuer_zeitraum <- data.frame(Datum = seq.Date(from = as.Date("2019-06-04"), to = as.Date("2019-08-01"), by = "day"))
+neuer_zeitraum <- data.frame(Datum = seq.Date(from = as.Date("2018-08-01"), to = as.Date("2019-08-01"), by = "day"))
 
 #für jedes Datum noch die sechs Warengruppen hinzufügen
 neues_datum <- expand(neuer_zeitraum, Datum, Warengruppe = (1:6))
+#neues_datum <- filter(neues_datum, Warengruppe != 6) # TODO: Warengruppe 6 raus, außer in Monaten >= 11
 
 #JOIN EVERYTHING
 neues_datum <- left_join(neues_datum, wetter)
@@ -123,13 +145,19 @@ neues_datum$Feiertag <- na.replace(neues_datum$Feiertag, 0) #dasselbe bei Feiert
 
 #WOCHENTAGE, MONATE UND AS FACTOR
 neues_datum <- mutate(neues_datum, Warengruppe = as.factor(Warengruppe), Wochentag = as.factor(weekdays(Datum)), Monat = as.factor(month(Datum)), Feiertag = as.factor(Feiertag), KielerWoche = as.factor(KielerWoche))
-#lapply(neues_datum, nlevels)
+
+neues_datum$Jahreszeit [neues_datum$Monat %in% c(1, 11, 12)] = "Winter"
+neues_datum$Jahreszeit [neues_datum$Monat %in% c(2, 3, 4)] = "Frühling"
+neues_datum$Jahreszeit [neues_datum$Monat %in% c(5, 6, 7)] = "Sommer"
+neues_datum$Jahreszeit [neues_datum$Monat %in% c(8, 9, 10)] = "Herbst"
+
+neues_datum$Saison <- 0
+neues_datum$Saison [neues_datum$Monat %in% c(1, 10, 11, 12)] <- 1
+
+umsatzdaten <- mutate(umsatzdaten, Jahreszeit = as.factor(Jahreszeit), Saison = as.factor(Saison))
 
 #alle Zeilen herausfilter, die irgendwo ein NA haben
 neues_datum <- neues_datum[complete.cases(neues_datum),]
-
-#neues_datum <- left_join(neues_datum, umsatzdaten)
-head(neues_datum)
 
 #die restlichen Umsätze für 2019 berechnen
 neues_datum$Umsatz <- predict(best_model, newdata=neues_datum)
