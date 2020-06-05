@@ -7,6 +7,11 @@ output: html_document
 
 Im ersten Block werden alle benötigten Libraries und Tabellen importiert.
 ```{r, message=FALSE}
+
+# Umgebungsvariablen löschen
+remove(list = ls())
+
+
 library(readr)
 library(lubridate)
 library(ggplot2)
@@ -77,6 +82,9 @@ umsatzdaten <- left_join(umsatzdaten, data) %>% mutate(Warengruppe = as.factor(W
 head(umsatzdaten)
 summary(umsatzdaten)
 str(umsatzdaten)
+
+#write cvs for NN
+write.csv(umsatzdaten, file= "umsatzdaten_final.csv", row.names = FALSE)
 ```
 
 WARENGRUPPE 1
