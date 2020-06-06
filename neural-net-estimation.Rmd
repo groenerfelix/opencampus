@@ -52,14 +52,15 @@ from tensorflow.keras import layers
 
 # Definition der Form des tiefen neuronalen Netzes (Deep Neural Nets)
 model = keras.Sequential([
-  layers.Dense(10, activation='relu', input_shape=[len(r.train_dataset.keys())]),
-  layers.Dense(4, activation='relu'),
+  layers.Dense(40, activation='relu', input_shape=[len(r.train_dataset.keys())]),
+  layers.Dense(20, activation='relu'),
   layers.Dense(1)
 ])
 
 # Definition der Kosten-(Loss-)Funktion und der Optimierungsfunktion mit seinen Hyperparametern
 model.compile(loss="mse",
-              optimizer=tf.keras.optimizers.SGD(lr=1e-6, momentum=0.9))
+              optimizer=tf.keras.optimizers.SGD(lr=1e-4, momentum=0.6)) 
+
 
 # Ausgabe einer Zusammenfassung zur Form des Modells, das geschaetzt wird (nicht notwendig)
 model.summary()
@@ -74,7 +75,7 @@ model.summary()
 history = model.fit(r.train_dataset, r.train_labels, epochs=150, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-model.save("python_model.h5")
+model.save("python_model_best.h5")
 
 ```
 
@@ -103,7 +104,7 @@ ggplot(data[-1,]) +
 
 ### (Ggf.) Laden eines gespeicherten Neuronalen Netzes ###
 ```{python}
-model = keras.models.load_model("python_model_best.h5")
+# model = keras.models.load_model("python_model_1.h5")
 
 ```
 
@@ -125,6 +126,10 @@ test_actuals <- umsatzdaten$Umsatz[-train_ind]
 # Vergleich der Gütekriterien für die Traingings- und Testdaten
 cat(paste0("MAPE on the Training Data:\t", format(mape(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
 cat(paste0("\nMAPE on the Test Data:\t\t", format(mape(test_actuals, test_predictions)*100, digits=3, nsmall=2)))
+
+# Vergleich mit MAE
+cat(paste0("MAE on the Training Data:\t", format(mae(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
+cat(paste0("\nMAE on the Test Data:\t\t", format(mae(test_actuals, test_predictions)*100, digits=3, nsmall=2)))
 
 
 ```
