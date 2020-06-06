@@ -121,9 +121,34 @@ best_model <- tune_data[["best.model"]]
 summary(best_model) 
 
 #PREDICTIONS
-prediction_training <- predict(best_model)
-prediction_test <- predict(best_model, newdata=testing_data)
-rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test = mape(prediction_test, testing_data$Umsatz)))
+#prediction_training <- predict(best_model)
+#prediction_test <- predict(best_model, newdata=testing_data)
+#rbind(MAPE = c(Training = mape(prediction_training, training_data$Umsatz), Test = mape(prediction_test, testing_data$Umsatz)))
+
+count(filter(training_data, Warengruppe == 1))
+structure(filter(training_data, Warengruppe == 1)$Umsatz)
+
+
+
+rbind("Warengruppe 1" = c(
+  Training = mape(predict(best_model, newdata=filter(training_data, Warengruppe == 1)), filter(training_data, Warengruppe == 1)$Umsatz), 
+  Test = mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 1)), filter(testing_data, Warengruppe == 1)$Umsatz)),
+      "Warengruppe 2" = c(
+  mape(predict(best_model, newdata=filter(training_data, Warengruppe == 2)), filter(training_data, Warengruppe == 2)$Umsatz), 
+  mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 2)), filter(testing_data, Warengruppe == 2)$Umsatz)),
+      "Warengruppe 3" = c(
+  mape(predict(best_model, newdata=filter(training_data, Warengruppe == 3)), filter(training_data, Warengruppe == 3)$Umsatz), 
+  mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 3)), filter(testing_data, Warengruppe == 3)$Umsatz)),
+      "Warengruppe 4" = c(
+  mape(predict(best_model, newdata=filter(training_data, Warengruppe == 4)), filter(training_data, Warengruppe == 4)$Umsatz), 
+  mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 4)), filter(testing_data, Warengruppe == 4)$Umsatz)),
+      "Warengruppe 5" = c(
+  mape(predict(best_model, newdata=filter(training_data, Warengruppe == 5)), filter(training_data, Warengruppe == 5)$Umsatz), 
+  mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 5)), filter(testing_data, Warengruppe == 5)$Umsatz)),
+      "Warengruppe 6" = c(
+  mape(predict(best_model, newdata=filter(training_data, Warengruppe == 6)), filter(training_data, Warengruppe == 6)$Umsatz), 
+  mape(predict(best_model, newdata = filter(testing_data, Warengruppe == 6)), filter(testing_data, Warengruppe == 6)$Umsatz))
+    )
 
 ```
 
