@@ -1,7 +1,7 @@
 #### TODO 
 # Wochentag macht noch Stress!!
 # falsche Zuordnung von Cols bei der yolo Berechnung von M und SD für MONAT
-# Save die yolo Aktion
+# die yolo Aktion aufräumen
   
 
 ###################################################
