@@ -74,7 +74,7 @@ model.summary()
 history = model.fit(r.train_dataset, r.train_labels, epochs=150, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-# model.save("python_model.h5")
+model.save("python_model.h5")
 
 ```
 
@@ -118,8 +118,8 @@ test_predictions_norm <- py$model$predict(test_dataset)
 train_predictions <- (train_predictions_norm * norm_values_list$sd[1] ) + norm_values_list$mean[1]
 test_predictions <- (test_predictions_norm * norm_values_list$sd[1]) + norm_values_list$mean[1]
 # Selektion der zugehörigen tatsächlichen Preise
-train_actuals <- house_pricing$price[train_ind]
-test_actuals <- house_pricing$price[-train_ind]
+train_actuals <- umsatzdaten$Umsatz[train_ind]
+test_actuals <- umsatzdaten$Umsatz[-train_ind]
 
 
 # Vergleich der Gütekriterien für die Traingings- und Testdaten
