@@ -75,7 +75,7 @@ model.summary()
 history = model.fit(r.train_dataset, r.train_labels, epochs=100, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-# model.save("python_model_2.h5")
+# model.save("python_model_final_presentation.h5")
 
 ```
 
