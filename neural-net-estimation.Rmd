@@ -52,14 +52,17 @@ from tensorflow.keras import layers
 
 # Definition der Form des tiefen neuronalen Netzes (Deep Neural Nets)
 model = keras.Sequential([
-  layers.Dense(39, activation='relu', input_shape=[len(r.train_dataset.keys())]),
-  layers.Dense(18, activation='relu'),
+  layers.Dense(29, activation='relu', input_shape=[len(r.train_dataset.keys())]),
+  layers.Dense(19, activation='relu'),
+  layers.Dense(13, activation='relu'),
   layers.Dense(1)
 ])
 
+
 # Definition der Kosten-(Loss-)Funktion und der Optimierungsfunktion mit seinen Hyperparametern
 model.compile(loss="mse",
-              optimizer=tf.keras.optimizers.SGD(lr=1e-4, momentum=0.62)) 
+              optimizer=tf.keras.optimizers.SGD(lr=0.00006, momentum=0.9, nesterov=True))
+              
 
 
 # Ausgabe einer Zusammenfassung zur Form des Modells, das geschaetzt wird (nicht notwendig)
@@ -67,15 +70,42 @@ model.summary()
 
 
 ```
+```{r}
+#### Erklärung zum Neuronalen Netz
+## Hidden layer und Neuronen 
+
+# input layer: 10 features, 29 input variablen 29/19/13/1
+# 1 hidden layer wenn Daten noch clusterbar sind
+# 2 hidden layer bei komplexeren Datensätzen
+# 2 hidden layer haben sich awohl als oft nützlich erwiesen
+# mehr als zwei hidden layer unnötig für Problem, führt zu overfitting
+# Faustregel: 2/3 von einem zum nächsten layer
+
+## hParamenter von SGD
+# start values: Generally used values lr = 1e-4, momentum=0.9.
+# zuerst an lr rumgespielt, weil irgendwo gelesen das wichtiger
+# danach momentum optimiert, d.h also die Grenzen abgetastet und die Mitte genommen
+
+# nesterov: https://dominikschmidt.xyz/nesterov-momentum/
+# next steps: optimizer wie adam und lr feedback loop wäre nice, bin gescheitert... 
+
+
+## Quellen
+# https://www.researchgate.net/post/How_do_I_represent_input_variables_for_artificial_neural_network_design 
+# https://towardsdatascience.com/beginners-ask-how-many-hidden-layers-neurons-to-use-in-artificial-neural-networks-51466afa0d3e
+# https://stackoverflow.com/questions/51017181/what-should-be-the-value-for-learning-rate-and-momentum
+# https://machinelearningmastery.com/how-to-configure-the-number-of-layers-and-nodes-in-a-neural-network/
+
+```
 
 ### Schätzung des neuronalen Netzes
 
 ```{python}
 # Schaetzung des Modells
-history = model.fit(r.train_dataset, r.train_labels, epochs=100, validation_data = (r.test_dataset, r.test_labels), verbose=0)
+history = model.fit(r.train_dataset, r.train_labels, epochs=1500, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-# ("python_model_final_presentation.h5")
+model.save("python_model_final_presentation_1500.h5")
 
 ```
 
@@ -96,8 +126,8 @@ ggplot(data[-1,]) +
   scale_colour_manual( values = c("Training Loss"="blue", "Validation Loss"="red") ) +
   labs(title="Loss Function Values During Optimization") +
   xlab("Iteration Number") +
-  ylab("Loss") 
-
+  ylab("Loss") +
+  theme_minimal()
 
 ```
 
@@ -149,7 +179,8 @@ ggplot(data_train[1:100,]) +
   scale_colour_manual( values = c("Predicted Values"="blue", "Actual Values"="red") ) +
   labs(title="Predicted and Actual Values for the Training Data") +
   xlab("Case Number") +
-  ylab("Price in 1.000 USD") 
+  ylab("Sales in 1.000 USD") +
+  theme_minimal()
 
 # Plot der Ergebnisse der Testdaten
 ggplot(data_test[1:100,]) +
@@ -158,7 +189,8 @@ ggplot(data_test[1:100,]) +
   scale_colour_manual( values = c("Predicted Values"="blue", "Actual Values"="red") ) +
   labs(title="Predicted and Actual Values for the Test Data") +
   xlab("Case Number") +
-  ylab("Price in 1.000 USD") 
+  ylab("Sales in 1.000 USD") +
+  theme_minimal()
 
 
 ```
