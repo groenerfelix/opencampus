@@ -82,7 +82,7 @@ str(umsatzdaten)
 Hier erstelle ich die Balkendiagramme - Patti
 ```{r}
 # Balkendiagramm: Monate
-my_sum <- umsatzdaten %>%
+sum_monat <- umsatzdaten %>%
   group_by(Monat) %>%
   summarise(
     n=n(),
@@ -92,15 +92,16 @@ my_sum <- umsatzdaten %>%
   mutate( se=sd/sqrt(n))  %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 # Confidence Interval
-ggplot(my_sum) +
+monat<-ggplot(sum_monat) +
   geom_bar( aes(x=Monat, y=mean), stat="identity", fill="darkgrey", alpha=0.5) +
   geom_errorbar( aes(x=Monat, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="black", alpha=0.9, size=1.5) +
   ggtitle("Balkendiagramm für die Variable 'Monat' ")+
   xlab("Monate") + 
   ylab("Umsatz")
+ggsave("sum_monat.png")
 
 # Balkendiagram: gefühlte Temperatur
-my_sum <- umsatzdaten %>%
+sum_temp <- umsatzdaten %>%
   group_by(gefuehlteTemp) %>%
   summarise(
     n=n(),
@@ -111,12 +112,14 @@ my_sum <- umsatzdaten %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 
 # Confidence Interval
-ggplot(my_sum) +
+temp<-ggplot(sum_temp) +
   geom_bar( aes(x=gefuehlteTemp, y=mean), stat="identity", fill="darkgrey", alpha=0.5) +
   geom_errorbar( aes(x=gefuehlteTemp, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="black", alpha=0.9, size=1.5) +
   ggtitle("Balkendiagramm für die Variable 'gefühlte Temperatur' ")+
   xlab("Gefühlte Temperatur") + 
   ylab("Umsatz")
+ggsave("sum_temp.png")
+
 ```
 
 
