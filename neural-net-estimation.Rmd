@@ -124,11 +124,11 @@ test_actuals <- umsatzdaten$Umsatz[-train_ind]
 
 
 # Vergleich der Gütekriterien für die Traingings- und Testdaten
-cat(paste0("MAPE on the Training Data:\t", format(mape(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
-cat(paste0("\nMAPE on the Test Data:\t\t", format(mape(test_actuals, test_predictions)*100, digits=3, nsmall=2)))
+cat(paste0("MAPE on the Training Data:\t", format(mape(train_predictions, train_actuals)*100, digits=3, nsmall=2)))
+cat(paste0("\nMAPE on the Test Data:\t\t", format(mape(test_predictions, test_actuals)*100, digits=3, nsmall=2)))
 
 # Vergleich mit MAE
-cat(paste0("MAE on the Training Data:\t", format(mae(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
+cat(paste0("\nMAE on the Training Data:\t", format(mae(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
 cat(paste0("\nMAE on the Test Data:\t\t", format(mae(test_actuals, test_predictions)*100, digits=3, nsmall=2)))
 
 
