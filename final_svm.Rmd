@@ -140,16 +140,16 @@ rbind(
       )
 
 #Test-Vergleich für den 03.06.2019
-test <- filter(umsatzdaten, Datum == as.Date("2019-06-03"))
-
-rbind(
-  "Warengruppe 1" = c("Prognose" = predict(best_model_1, newdata=filter(test, Warengruppe == 1)), "Real" = filter(test, Warengruppe == 1)$Umsatz),
-  "Warengruppe 2" = c(predict(best_model_2, newdata=filter(test, Warengruppe == 2)), filter(test, Warengruppe == 2)$Umsatz),
-  "Warengruppe 3" = c(predict(best_model_3, newdata=filter(test, Warengruppe == 3)), filter(test, Warengruppe == 3)$Umsatz),
-  "Warengruppe 4" = c(predict(best_model_4, newdata=filter(test, Warengruppe == 4)), filter(test, Warengruppe == 4)$Umsatz),
-  "Warengruppe 5" = c(predict(best_model_5, newdata=filter(test, Warengruppe == 5)), filter(test, Warengruppe == 5)$Umsatz),
-  "Warengruppe 6" = c(predict(best_model_6, newdata=filter(test, Warengruppe == 6)), filter(test, Warengruppe == 6)$Umsatz)
-      )
+# test <- filter(umsatzdaten, Datum == as.Date("2019-06-03"))
+# 
+# rbind(
+#   "Warengruppe 1" = c("Prognose" = predict(best_model_1, newdata=filter(test, Warengruppe == 1)), "Real" = filter(test, Warengruppe == 1)$Umsatz),
+#   "Warengruppe 2" = c(predict(best_model_2, newdata=filter(test, Warengruppe == 2)), filter(test, Warengruppe == 2)$Umsatz),
+#   "Warengruppe 3" = c(predict(best_model_3, newdata=filter(test, Warengruppe == 3)), filter(test, Warengruppe == 3)$Umsatz),
+#   "Warengruppe 4" = c(predict(best_model_4, newdata=filter(test, Warengruppe == 4)), filter(test, Warengruppe == 4)$Umsatz),
+#   "Warengruppe 5" = c(predict(best_model_5, newdata=filter(test, Warengruppe == 5)), filter(test, Warengruppe == 5)$Umsatz),
+#   "Warengruppe 6" = c(predict(best_model_6, newdata=filter(test, Warengruppe == 6)), filter(test, Warengruppe == 6)$Umsatz)
+#       )
 
 
 ```
