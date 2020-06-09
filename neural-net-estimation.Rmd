@@ -102,10 +102,10 @@ model.summary()
 
 ```{python}
 # Schaetzung des Modells
-history = model.fit(r.train_dataset, r.train_labels, epochs=1500, validation_data = (r.test_dataset, r.test_labels), verbose=0)
+history = model.fit(r.train_dataset, r.train_labels, epochs=150000, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-model.save("python_model_final_presentation_1500.h5")
+model.save("python_model_final_presentation_150000.h5")
 
 ```
 
