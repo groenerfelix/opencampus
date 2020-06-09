@@ -1,0 +1,111 @@
+---
+title: "GGplot"
+author: "Patricia Bauer"
+date: "9 6 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Hier erstelle ich die Balkendiagramme - Patti
+```{r}
+# Balkendiagramm: Monate
+my_sum <- umsatzdaten %>%
+  group_by(Monat) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=Monat, y=mean), stat="identity", fill="cornflowerblue", alpha=0.5) +
+  geom_errorbar( aes(x=Monat, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="cadetblue", alpha=0.9, size=1.5) +
+  ggtitle("Balkendiagramm für die Variable 'Monat' ")+
+  xlab("Monate") + 
+  ylab("Mittelwerte-Umsatz")
+monatplot <- last_plot()
+ggsave("monatplot.png")
+```
+
+```{r}
+# Balkendiagramm: gefühlte Temperatur
+sum_temp <- umsatzdaten %>%
+  group_by(gefuehlteTemp, .groups = TRUE) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(sum_temp) +
+  geom_bar( aes(x=gefuehlteTemp, y=mean), stat="identity", fill="cornflowerblue", alpha=0.5) +
+  geom_errorbar( aes(x=gefuehlteTemp, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="cadetblue", alpha=0.9, size=1.5) +
+  ggtitle("Balkendiagramm für die Variable 'gefühlte Temperatur ' ")+
+  xlab("gefühlte Temperatur") + 
+  ylab("Mittelwerte-Umsatz")
+p <- last_plot()
+p + theme( axis.line = element_line(colour = "darkblue", 
+                      size = 1, linetype = "solid"))
+p + scale_x_discrete(limits=0:3,                                             labels=c("sehr kalt","kalt","warm","sehr warm")) 
+ggsave("Tempplot.png")
+```
+
+```{r}
+# Balkendiagramm: Feiertage
+sum_feiertag <- umsatzdaten %>%
+  group_by(Feiertag, .groups = TRUE) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(sum_feiertag) +
+  geom_bar( aes(x=Feiertag, y=mean), stat="identity", fill="cornflowerblue", alpha=0.5) +
+  geom_errorbar( aes(x=Feiertag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="cadetblue", alpha=0.9, size=1.5) +
+  ggtitle("Balkendiagramm für die Variable 'Feiertag' ")+
+  xlab("Feiertag") + 
+  ylab("Mittelwerte-Umsatz")
+p <- last_plot()
+p + scale_x_discrete(                                            labels=c("Nein","Ja")) 
+ggsave("Feiertagplot.png")
+
+```
+
+```{r}
+# Balkendiagramm: Jahreszeit
+sum_jahreszeit <- umsatzdaten %>%
+  group_by(Jahreszeit) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(sum_jahreszeit) +
+  geom_bar( aes(x=Jahreszeit, y=mean), stat="identity", fill="cornflowerblue", alpha=0.5) +
+  geom_errorbar( aes(x=Jahreszeit, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="cadetblue", alpha=0.9, size=1.5) +
+  ggtitle("Balkendiagramm für die Variable 'Jahreszeit' ")+
+  xlab("Feiertag") + 
+  ylab("Mittelwerte-Umsatz")
+p <- last_plot()
+p + scale_x_discrete(limit = c("Frühling", "Sommer", "Herbst", "Winter"))
+#p + scale_x_discrete(                                            labels=c("Nein","Ja"))
+ggsave("Jahreszeitplot.png")
+```
+
