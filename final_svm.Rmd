@@ -95,7 +95,7 @@ Hier wird ein SVM-Modell getuned. Dann werden die MAPEs der Vorhersage für den 
 ```{r, message=FALSE}
 #CREATING THE SVM MODEL
 #summary(training_data)
-tune_data <- tune(svm, Umsatz ~ Wochentag + Warengruppe *  Monat + KielerWoche + Feiertag + Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(1:3)))
+tune_data <- tune(svm, Umsatz ~ Wochentag + Warengruppe *  Monat + KielerWoche + Feiertag + Flohmarkt + Kielmachtauf + Bewoelkung + Temperatur, data=training_data, ranges = list(epsilon = seq(0.2, 1, 0.1), cost = 2^(2:3)))
 
 #ERGEBNISSE
 #print(tune_data)
